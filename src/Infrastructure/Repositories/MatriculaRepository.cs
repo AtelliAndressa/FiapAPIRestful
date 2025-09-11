@@ -1,6 +1,7 @@
 ﻿using Core.Domain.Entities;
 using Core.Domain.Interfaces;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,29 +19,50 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public Task AddAsync(Matricula matricula)
+        public async Task AddAsync(Matricula matricula)
         {
-            throw new NotImplementedException();
+            await _context.Matriculas.AddAsync(matricula);
+            await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var matricula = await _context.Matriculas.FindAsync(id);
+
+            if (matricula != null)
+            {
+                _context.Matriculas.Remove(matricula);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task<IEnumerable<Matricula>> GetAllAsync()
+        public async Task<IEnumerable<Matricula>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Matriculas.ToListAsync();
         }
 
-        public Task<Matricula> GetByIdAsync(int id)
+        public async Task<Matricula> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var matricula = await _context.Matriculas
+                .Include(m => m.Aluno)
+                .Include(m => m.Curso)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            return matricula;
         }
 
-        public Task UpdateAsync(Matricula matricula)
+        public async Task UpdateAsync(Matricula matricula)
         {
-            throw new NotImplementedException();
+            var matriculaEditada = await _context.Matriculas.FindAsync(matricula.Id);
+
+            if (matriculaEditada != null)
+            {
+                matriculaEditada.AlunoId = matricula.AlunoId;
+                matriculaEditada.CursoId = matricula.CursoId;
+                matriculaEditada.DataMatricula = matricula.DataMatricula;
+
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

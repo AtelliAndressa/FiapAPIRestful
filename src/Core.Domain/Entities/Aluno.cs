@@ -14,6 +14,8 @@ namespace Core.Domain.Entities
 
         public required string Cpf { get; set; }
 
+        public required string Email { get; set; }
+
         public DateTime DataNascimento { get; set; }
     }
 }

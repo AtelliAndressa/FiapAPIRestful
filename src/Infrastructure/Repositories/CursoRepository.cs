@@ -1,6 +1,7 @@
 ﻿using Core.Domain.Entities;
 using Core.Domain.Interfaces;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,29 +19,46 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public Task AddAsync(Curso curso)
+        public async Task AddAsync(Curso curso)
         {
-            throw new NotImplementedException();
+            await _context.Cursos.AddAsync(curso);
+            await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var curso = await _context.Cursos.FindAsync(id);
+
+            if (curso != null)
+            {
+                _context.Cursos.Remove(curso);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task<IEnumerable<Curso>> GetAllAsync()
+        public async Task<IEnumerable<Curso>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Cursos.ToListAsync();
         }
 
-        public Task<Curso> GetByIdAsync(int id)
+        public async Task<Curso> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var curso = await _context.Cursos
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            return curso;
         }
 
-        public Task UpdateAsync(Curso curso)
+        public async Task UpdateAsync(Curso curso)
         {
-            throw new NotImplementedException();
+            var cursoEditado = await _context.Cursos.FindAsync(curso.Id);
+            
+            if (cursoEditado != null)
+            {
+                cursoEditado.Nome = curso.Nome;
+                cursoEditado.Descricao = curso.Descricao;
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

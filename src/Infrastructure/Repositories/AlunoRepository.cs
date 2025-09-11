@@ -1,6 +1,7 @@
 ﻿using Core.Domain.Entities;
 using Core.Domain.Interfaces;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,29 +19,47 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public Task AddAsync(Aluno aluno)
+        public async Task AddAsync(Aluno aluno)
         {
-            throw new NotImplementedException();
+            await _context.Alunos.AddAsync(aluno);
+            await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var aluno = await _context.Alunos.FindAsync(id);
+
+            if (aluno != null)
+            {
+                _context.Alunos.Remove(aluno);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task<IEnumerable<Aluno>> GetAllAsync()
+        public async Task<IEnumerable<Aluno>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Alunos.ToListAsync();
         }
 
-        public Task<Aluno> GetByIdAsync(int id)
+        public async Task<Aluno> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var aluno = await _context.Alunos
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            return aluno;
         }
 
-        public Task UpdateAsync(Aluno aluno)
+        public async Task UpdateAsync(Aluno aluno)
         {
-            throw new NotImplementedException();
+            var alunoEditado = await _context.Alunos.FindAsync(aluno.Id);
+
+            if (alunoEditado != null)
+            {
+                alunoEditado.Nome = aluno.Nome;
+                alunoEditado.Email = aluno.Email;
+
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
