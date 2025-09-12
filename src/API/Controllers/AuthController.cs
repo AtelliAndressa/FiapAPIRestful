@@ -22,6 +22,12 @@ public class AuthController : ControllerBase
         _configuration = configuration;
     }
 
+    /// <summary>
+    /// Cadastra um novo usuario administrador no sistema.
+    /// Só pode ser executado por um Administrador.
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
     [HttpPost("register-admin")]
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminDto model)
@@ -59,6 +65,12 @@ public class AuthController : ControllerBase
         return Ok(new { Status = "Success", Message = "Administrador criado com sucesso!" });
     }
 
+    /// <summary>
+    /// Cadastra um novo usuario comum no sistema.
+    /// Só pode ser executado por um Administrador.
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
     [HttpPost("register-user")]
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto model)
@@ -141,6 +153,78 @@ public class AuthController : ControllerBase
 
         return Unauthorized();
     }
+
+    /// <summary>
+    /// Permite que o usuário autenticado altere sua própria senha.
+    /// </summary>
+    /// <remarks>
+    /// O usuário deve fornecer sua senha atual para verificação, além da nova senha e sua confirmação.
+    /// </remarks>
+    [HttpPost("change-password")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto model)
+    {
+        if (model.NewPassword != model.ConfirmNewPassword)
+        {
+            return BadRequest(new { Status = "Error", Message = "A nova senha e a confirmação não conferem." });
+        }
+
+        string username = User.Identity.Name;
+
+        IdentityUser? user = await _userManager.FindByNameAsync(username);
+
+        if (user == null)
+        {
+            return NotFound(new { Status = "Error", Message = "Usuário não encontrado." });
+        }
+
+        IdentityResult result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(new { Status = "Error", Errors = result.Errors.Select(e => e.Description) });
+        }
+
+        return Ok(new { Status = "Success", Message = "Senha alterada com sucesso!" });
+    }
+
+    /// <summary>
+    /// Permite que um administrador redefina a senha de qualquer usuário.
+    /// </summary>
+    /// <remarks>
+    /// Esta é uma operação privilegiada e só pode ser executada por um administrador.
+    /// </remarks>
+    [HttpPost("reset-password-admin")]
+    [Authorize(Policy = "AdminOnly")] 
+    public async Task<IActionResult> ResetPasswordAdmin([FromBody] ResetPasswordDto model)
+    {
+        if (model.NewPassword != model.ConfirmNewPassword)
+        {
+            return BadRequest(new { Status = "Error", Message = "A nova senha e a confirmação não conferem." });
+        }
+
+        IdentityUser? user = await _userManager.FindByEmailAsync(model.Email);
+
+        if (user == null)
+        {
+            return NotFound(new { Status = "Error", Message = "Usuário com o email especificado não foi encontrado." });
+        }
+
+        string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        IdentityResult result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(new { Status = "Error", Errors = result.Errors.Select(e => e.Description) });
+        }
+
+        return Ok(new { Status = "Success", Message = "Senha do usuário redefinida com sucesso pelo administrador!" });
+    }
 }
 
 public record LoginModel(string Username, string Password);
+
+public record ChangePasswordDto(string CurrentPassword, string NewPassword, string ConfirmNewPassword);
+
+public record ResetPasswordDto(string Email, string NewPassword, string ConfirmNewPassword);

@@ -18,13 +18,10 @@ public class AlunosController : ControllerBase
     }
 
     /// <summary>
-    /// Recupera um aluno pelo seu identificador único.
+    /// Retorna um aluno pelo seu identificador único.
     /// </summary>
-    /// <remarks>Este método executa uma operação assíncrona para buscar os dados do aluno. 
-    /// Certifique-se de que o <paramref name="id"/> fornecido corresponda a um registro de aluno válido.</remarks>
-    /// <param name="id">O identificador único do aluno a ser recuperado.</param>
-    /// <returns>Um <see cref="IActionResult"/> contendo os dados do aluno, se encontrado; 
-    /// caso contrário, um <see cref="NotFoundResult"/> se nenhum aluno com o identificador especificado existir.</returns>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id}")]
     [Authorize(Policy = "AdminOrUser")]
     public async Task<IActionResult> GetById(int id)
@@ -40,10 +37,9 @@ public class AlunosController : ControllerBase
     }
 
     /// <summary>
-    /// Recupera todos os alunos cadastrados.
+    /// Retorna todos os alunos cadastrados no sistema.
     /// </summary>
-    /// <remarks>Este método executa uma operação assíncrona para buscar a lista completa de alunos.</remarks>
-    /// <returns>Um <see cref="IActionResult"/> contendo a lista de alunos.</returns>
+    /// <returns></returns>
     [HttpGet]
     [Authorize(Policy = "AdminOrUser")]
     public async Task<IActionResult> GetAll()
@@ -54,12 +50,11 @@ public class AlunosController : ControllerBase
     }
 
     /// <summary>
-    /// Cria um novo aluno.
+    /// Cadastra um novo aluno no sistema.
+    /// Só pode ser executado por um Administrador.
     /// </summary>
-    /// <remarks>Este método executa uma operação assíncrona para adicionar um novo aluno 
-    /// com base nos dados fornecidos.</remarks>
-    /// <param name="createAlunoDto">Objeto contendo os dados necessários para criar o aluno.</param>
-    /// <returns>Um <see cref="CreatedAtActionResult"/> indicando que o aluno foi criado com sucesso.</returns>
+    /// <param name="createAlunoDto"></param>
+    /// <returns></returns>
     [HttpPost]
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Post([FromBody] AlunoDto createAlunoDto)
@@ -70,11 +65,11 @@ public class AlunosController : ControllerBase
     }
 
     /// <summary>
-    /// Atualiza os dados de um aluno existente.
+    /// Atualiza os dados de um aluno existente no sistema.
+    /// Só pode ser executado por um Administrador.
     /// </summary>
-    /// <remarks>Este método executa uma operação assíncrona para atualizar os dados de um aluno.
-    /// <param name="alunoDto">Objeto contendo os dados atualizados do aluno.</param>
-    /// <returns>Um <see cref="NoContentResult"/> se a atualização for bem-sucedida;
+    /// <param name="alunoDto"></param>
+    /// <returns></returns>
     [HttpPut("{id}")]
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Put([FromBody] AlunoDto alunoDto)
@@ -85,13 +80,11 @@ public class AlunosController : ControllerBase
     }
 
     /// <summary>
-    /// Exclui um aluno existente.
+    /// Exclui um aluno existente no sistema.
+    /// Só pode ser executado por um Administrador.
     /// </summary>
-    /// <remarks>Este método executa uma operação assíncrona para excluir um aluno 
-    /// com base no identificador fornecido.</remarks>
-    /// <param name="id">O identificador único do aluno a ser excluído.</param>
-    /// <returns>Um <see cref="NoContentResult"/> se o aluno for excluído com sucesso; 
-    /// caso contrário, um <see cref="NotFoundResult"/> se o aluno não existir.</returns>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete("{id}")]
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Delete(int id)

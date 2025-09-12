@@ -17,6 +17,11 @@ public class CursosController : ControllerBase
         _cursoService = cursoService;
     }
 
+    /// <summary>
+    /// Retorna um curso pelo seu identificador único.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id}")]
     [Authorize(Policy = "AdminOrUser")]
     public async Task<IActionResult> GetById(int id)
@@ -31,6 +36,10 @@ public class CursosController : ControllerBase
         return Ok(curso);
     }
 
+    /// <summary>
+    /// Retorna todas os cursos cadastrados no sistema.
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     [Authorize(Policy = "AdminOrUser")]
     public async Task<IActionResult> GetAll()
@@ -40,6 +49,12 @@ public class CursosController : ControllerBase
         return Ok(cursos);
     }
 
+    /// <summary>
+    /// Cria um novo registro de um curso.
+    /// Só pode ser executado por um Administrador. 
+    /// </summary>
+    /// <param name="createCursoDto"></param>
+    /// <returns></returns>
     [HttpPost]
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Post([FromBody] CursoDto createCursoDto)
@@ -49,6 +64,12 @@ public class CursosController : ControllerBase
         return CreatedAtAction(nameof(GetAll), null);
     }
 
+    /// <summary>
+    /// Atualiza um registro de um curso.
+    /// Só pode ser executado por um Administrador.
+    /// </summary>
+    /// <param name="cursoDto"></param>
+    /// <returns></returns>
     [HttpPut("{id}")]
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Put([FromBody] CursoDto cursoDto)
@@ -58,6 +79,12 @@ public class CursosController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Deleta o registro do curso usando um id específico.
+    /// Só pode ser executado por um Administrador.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete("{id}")]
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Delete(int id)
