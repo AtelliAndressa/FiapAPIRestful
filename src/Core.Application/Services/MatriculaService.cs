@@ -77,20 +77,16 @@ namespace Core.Application.Services
 
         public async Task<IEnumerable<MatriculaDto>> GetByStudentIdAsync(int studentId)
         {
-            var matriculas = await _matriculaRepository.GetAllAsync();
+            IEnumerable<Matricula> matriculas = await _matriculaRepository.GetByAlunoIdAsync(studentId);
 
-            var filteredMatriculas = matriculas.Where(m => m.AlunoId == studentId);
-
-            return filteredMatriculas.Select(m => new MatriculaDto(m.Id, m.AlunoId, m.CursoId, m.DataMatricula));
+            return matriculas.Select(m => new MatriculaDto(m.Id, m.AlunoId, m.CursoId, m.DataMatricula));
         }
 
         public async Task<IEnumerable<MatriculaDto>> GetByCourseIdAsync(int courseId)
         {
-            IEnumerable<Matricula> matriculas = await _matriculaRepository.GetAllAsync();
+            IEnumerable<Matricula> matriculas = await _matriculaRepository.GetByCourseIdAsync(courseId);
 
-            IEnumerable<Matricula> filteredMatriculas = matriculas.Where(m => m.CursoId == courseId);
-
-            return filteredMatriculas.Select(m => new MatriculaDto(m.Id, m.AlunoId, m.CursoId, m.DataMatricula));
+            return matriculas.Select(m => new MatriculaDto(m.Id, m.AlunoId, m.CursoId, m.DataMatricula));
         }
     }
 }

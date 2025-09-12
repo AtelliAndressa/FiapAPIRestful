@@ -1,4 +1,5 @@
-﻿using Core.Domain.Entities;
+﻿using Core.Application.DTOs;
+using Core.Domain.Entities;
 using Core.Domain.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -63,6 +64,26 @@ namespace Infrastructure.Repositories
 
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<IEnumerable<Matricula>> GetByAlunoIdAsync(int alunoId)
+        {
+            return await _context.Matriculas
+                .Where(m => m.AlunoId == alunoId)
+                .Include(m => m.Aluno)
+                .Include(m => m.Curso)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Matricula>> GetByCourseIdAsync(int cursoId)
+        {
+            return await _context.Matriculas
+                .Where(m => m.CursoId == cursoId)
+                .Include(m => m.Aluno)
+                .Include(m => m.Curso)
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }

@@ -18,5 +18,9 @@ namespace Core.Domain.Interfaces
         Task UpdateAsync(Matricula matricula);
 
         Task DeleteAsync(int id);
+
+        Task<IEnumerable<Matricula>> GetByAlunoIdAsync(int alunoId);
+
+        Task<IEnumerable<Matricula>> GetByCourseIdAsync(int cursoId);
     }
 }
