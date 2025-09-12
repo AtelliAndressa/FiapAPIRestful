@@ -122,7 +122,7 @@ public class AuthController : ControllerBase
     /// Um <see cref="IActionResult"/> contendo o token JWT em caso de sucesso;
     /// caso contrário, retorna <see cref="UnauthorizedResult"/>.
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginModel model)
+    public async Task<IActionResult> Login([FromBody] LoginDto model)
     {
         var user = await _userManager.FindByNameAsync(model.Username);
 
@@ -222,9 +222,3 @@ public class AuthController : ControllerBase
         return Ok(new { Status = "Success", Message = "Senha do usuário redefinida com sucesso pelo administrador!" });
     }
 }
-
-public record LoginModel(string Username, string Password);
-
-public record ChangePasswordDto(string CurrentPassword, string NewPassword, string ConfirmNewPassword);
-
-public record ResetPasswordDto(string Email, string NewPassword, string ConfirmNewPassword);
