@@ -25,7 +25,6 @@ public static class SeedData
         var adminUser = await userManager.FindByEmailAsync("admin@exemplo.com");
         if (adminUser == null)
         {
-            // ATENÇÃO: Troque a senha em um ambiente de produção!
             var newAdminUser = new IdentityUser()
             {
                 UserName = "admin@exemplo.com",
