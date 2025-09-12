@@ -7,7 +7,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin")]
+[Authorize]
 public class AlunosController : ControllerBase
 {
     private readonly IAlunoService _alunoService;
@@ -46,7 +46,7 @@ public class AlunosController : ControllerBase
     /// <returns>Um <see cref="IActionResult"/> contendo a lista de alunos.</returns>
     [HttpGet]
     [Authorize(Policy = "AdminOrUser")]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> GetAll()
     {
         var alunos = await _alunoService.GetAllAsync();
 
@@ -66,27 +66,19 @@ public class AlunosController : ControllerBase
     {
         await _alunoService.AddAsync(createAlunoDto);
 
-        return CreatedAtAction(nameof(Get), null);
+        return CreatedAtAction(nameof(GetAll), null);
     }
 
     /// <summary>
     /// Atualiza os dados de um aluno existente.
     /// </summary>
     /// <remarks>Este método executa uma operação assíncrona para atualizar os dados de um aluno.
-    /// O <paramref name="id"/> deve corresponder ao identificador do aluno informado no corpo da requisição.</remarks>
-    /// <param name="id">O identificador único do aluno a ser atualizado.</param>
     /// <param name="alunoDto">Objeto contendo os dados atualizados do aluno.</param>
-    /// <returns>Um <see cref="NoContentResult"/> se a atualização for bem-sucedida; 
-    /// caso contrário, um <see cref="BadRequestResult"/> se houver inconsistência de ID.</returns>
+    /// <returns>Um <see cref="NoContentResult"/> se a atualização for bem-sucedida;
     [HttpPut("{id}")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> Put(int id, [FromBody] AlunoDto alunoDto)
+    public async Task<IActionResult> Put([FromBody] AlunoDto alunoDto)
     {
-        if (id != alunoDto.Id)
-        {
-            return BadRequest("ID mismatch");
-        }
-
         await _alunoService.UpdateAsync(alunoDto);
 
         return NoContent();

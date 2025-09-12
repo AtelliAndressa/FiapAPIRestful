@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace Core.Application.Validators;
 
-public class RegisterAdminDtoValidator : AbstractValidator<RegisterAdminDto>
+public class RegisterUserDtoValidator : AbstractValidator<RegisterAdminDto>
 {
-    public RegisterAdminDtoValidator()
+    public RegisterUserDtoValidator()
     {
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("O email é obrigatório.")
