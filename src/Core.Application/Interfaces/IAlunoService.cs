@@ -8,9 +8,9 @@ namespace Core.Application.Interfaces
 
         Task<IEnumerable<AlunoDto>> GetAllAsync();
 
-        Task<AlunoDto> AddAsync(AlunoDto alunoDto);
+        Task AddAsync(AlunoDto alunoDto);
 
-        Task<AlunoDto> UpdateAsync(AlunoDto alunoDto);
+        Task UpdateAsync(AlunoDto alunoDto);
 
         Task<bool> DeleteAsync(int id);
     }

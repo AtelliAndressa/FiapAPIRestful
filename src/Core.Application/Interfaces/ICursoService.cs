@@ -8,9 +8,9 @@ namespace Core.Application.Interfaces
 
         Task<IEnumerable<CursoDto>> GetAllAsync();
 
-        Task<CursoDto> AddAsync(CursoDto cursoDto);
+        Task AddAsync(CursoDto cursoDto);
 
-        Task<CursoDto> UpdateAsync(CursoDto cursoDto);
+        Task UpdateAsync(CursoDto cursoDto);
 
         Task<bool> DeleteAsync(int id);
     }
