@@ -22,7 +22,6 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// 2. Configurar JWT
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -41,7 +40,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// 3. Configurar Injeção de Dependência (IoC)
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("AdminOrUser", policy => policy.RequireRole("Admin", "User"));
+});
+
 builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 builder.Services.AddScoped<IAlunoService, AlunoService>();
 builder.Services.AddScoped<ICursoRepository, CursoRepository>();
@@ -50,11 +54,10 @@ builder.Services.AddScoped<IMatriculaRepository, MatriculaRepository>();
 builder.Services.AddScoped<IMatriculaService, MatriculaService>();
 
 
-// 4. Configurar FluentValidation
 builder.Services.AddControllers()
     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateAlunoDtoValidator>());
 
-// 5. Configurar Swagger/OpenAPI para suportar JWT
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "FiapAPIRestful", Version = "v1" });
@@ -81,7 +84,6 @@ builder.Services.AddSwaggerGen(c => {
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -90,13 +92,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Adicionar middlewares de autenticação e autorização
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-// Seed do banco de dados na inicialização
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

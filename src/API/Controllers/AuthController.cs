@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register-admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminDto model)
     {
         var userExists = await _userManager.FindByNameAsync(model.Email);
@@ -57,6 +57,43 @@ public class AuthController : ControllerBase
         }
 
         return Ok(new { Status = "Success", Message = "Administrador criado com sucesso!" });
+    }
+
+    [HttpPost("register-user")]
+    [Authorize(Policy = "AdminOnly")]
+    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto model)
+    {
+        var userExists = await _userManager.FindByNameAsync(model.Email);
+        if (userExists != null)
+        {
+            return StatusCode(StatusCodes.Status409Conflict,
+                new { Status = "Error", Message = "Já existe um usuário com este email!" });
+        }
+
+        var newUser = new IdentityUser()
+        {
+            Email = model.Email,
+            SecurityStamp = Guid.NewGuid().ToString(),
+            UserName = model.Email,
+            EmailConfirmed = true
+        };
+
+        var result = await _userManager.CreateAsync(newUser, model.Password);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(new { Status = "Error", Errors = result.Errors.Select(e => e.Description) });
+        }
+
+        var roleResult = await _userManager.AddToRoleAsync(newUser, "User");
+
+        if (!roleResult.Succeeded)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                new { Status = "Error", Message = "Falha ao atribuir o perfil de usuário." });
+        }
+
+        return Ok(new { Status = "Success", Message = "Usuário criado com sucesso!" });
     }
 
     /// <summary>

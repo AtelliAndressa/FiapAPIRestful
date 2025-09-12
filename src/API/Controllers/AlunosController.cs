@@ -26,6 +26,7 @@ public class AlunosController : ControllerBase
     /// <returns>Um <see cref="IActionResult"/> contendo os dados do aluno, se encontrado; 
     /// caso contrário, um <see cref="NotFoundResult"/> se nenhum aluno com o identificador especificado existir.</returns>
     [HttpGet("{id}")]
+    [Authorize(Policy = "AdminOrUser")]
     public async Task<IActionResult> GetById(int id)
     {
         var aluno = await _alunoService.GetByIdAsync(id);
@@ -44,6 +45,7 @@ public class AlunosController : ControllerBase
     /// <remarks>Este método executa uma operação assíncrona para buscar a lista completa de alunos.</remarks>
     /// <returns>Um <see cref="IActionResult"/> contendo a lista de alunos.</returns>
     [HttpGet]
+    [Authorize(Policy = "AdminOrUser")]
     public async Task<IActionResult> Get()
     {
         var alunos = await _alunoService.GetAllAsync();
@@ -59,6 +61,7 @@ public class AlunosController : ControllerBase
     /// <param name="createAlunoDto">Objeto contendo os dados necessários para criar o aluno.</param>
     /// <returns>Um <see cref="CreatedAtActionResult"/> indicando que o aluno foi criado com sucesso.</returns>
     [HttpPost]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Post([FromBody] AlunoDto createAlunoDto)
     {
         await _alunoService.AddAsync(createAlunoDto);
@@ -76,6 +79,7 @@ public class AlunosController : ControllerBase
     /// <returns>Um <see cref="NoContentResult"/> se a atualização for bem-sucedida; 
     /// caso contrário, um <see cref="BadRequestResult"/> se houver inconsistência de ID.</returns>
     [HttpPut("{id}")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Put(int id, [FromBody] AlunoDto alunoDto)
     {
         if (id != alunoDto.Id)
@@ -97,6 +101,7 @@ public class AlunosController : ControllerBase
     /// <returns>Um <see cref="NoContentResult"/> se o aluno for excluído com sucesso; 
     /// caso contrário, um <see cref="NotFoundResult"/> se o aluno não existir.</returns>
     [HttpDelete("{id}")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Delete(int id)
     {
         var result = await _alunoService.DeleteAsync(id);
