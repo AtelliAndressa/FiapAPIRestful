@@ -17,6 +17,13 @@ namespace Core.Application.Services
 
         public async Task AddAsync(TurmaDto turmaDto)
         {
+            bool turmaExists = await _turmaRepository.IsTeamAsync(turmaDto.Nome);
+
+            if (turmaExists)
+            {
+                throw new Exception("Já existe uma turma com este nome.");
+            }
+
             Turma turma = new Turma
             {
                 Nome = turmaDto.Nome,

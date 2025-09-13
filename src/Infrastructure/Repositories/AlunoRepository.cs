@@ -21,6 +21,13 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<Aluno> GetByCpfAsync(string cpf)
+        {
+            return await _context.Alunos
+                .AsNoTracking()
+                .FirstOrDefaultAsync(a => a.Cpf == cpf);
+        }
+
         public async Task UpdateAsync(Aluno aluno)
         {
             Aluno alunoEditado = await _context.Alunos.FindAsync(aluno.Id);

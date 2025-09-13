@@ -17,6 +17,13 @@ namespace Core.Application.Services
 
         public async Task AddAsync(AlunoDto alunoDto)
         {
+            Aluno alunoExists = await _alunoRepository.GetByCpfAsync(alunoDto.Cpf);
+
+            if (alunoExists != null)
+            {
+                throw new Exception("Já existe um aluno cadastrado com este CPF.");
+            }
+
             Aluno aluno = new Aluno
             {
                 Nome = alunoDto.Nome,

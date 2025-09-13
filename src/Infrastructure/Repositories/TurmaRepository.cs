@@ -35,7 +35,7 @@ namespace Infrastructure.Repositories
 
             if (turma == null)
             {
-                throw new KeyNotFoundException("Turma not found");
+                throw new KeyNotFoundException("Turma não encontrada.");
             }
 
             return turma;
@@ -46,6 +46,12 @@ namespace Infrastructure.Repositories
             await _context.Turmas.AddAsync(turma);
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsTeamAsync(string nome)
+        {
+            return await _context.Turmas
+                .AnyAsync(m => m.Nome == nome);
         }
 
         public async Task UpdateAsync(Turma turma)

@@ -149,16 +149,23 @@ namespace Core.Application.Services
             );
         }
 
-        public async Task<IEnumerable<MatriculaDto>> GetByTeamIdAsync(int courseId)
+        public async Task<PagedResult<MatriculaDto>> GetByTeamIdAsync(int courseId, int pageNumber, int pageSize)
         {
-            IEnumerable<Matricula> matriculas = await _matriculaRepository.GetByTeamIdAsync(courseId);
+            PagedResult<Matricula> pagedResultEntity = await _matriculaRepository.GetByTeamIdAsync(courseId, pageNumber, pageSize);
 
-            return matriculas.Select(m => new MatriculaDto(
+            List<MatriculaDto> itemsDto = pagedResultEntity.Items.Select(m => new MatriculaDto(
                 m.Id,
                 new AlunoDto(m.Aluno.Id, m.Aluno.Nome, m.Aluno.Cpf, m.Aluno.Email, m.Aluno.DataNascimento),
                 new TurmaDto(m.Turma.Id, m.Turma.Nome, m.Turma.Descricao),
                 m.DataMatricula
-            ));
+            )).ToList();
+
+            return new PagedResult<MatriculaDto>(
+                itemsDto,
+                pagedResultEntity.TotalCount,
+                pagedResultEntity.PageNumber,
+                pagedResultEntity.PageSize
+            );
         }
     }
 }

@@ -14,5 +14,7 @@ namespace Core.Domain.Interfaces
         Task UpdateAsync(Turma turma);
 
         Task DeleteAsync(int id);
+
+        Task<bool> IsTeamAsync(string nome);
     }
 }
