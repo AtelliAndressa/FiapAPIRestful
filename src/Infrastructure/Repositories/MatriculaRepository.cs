@@ -1,13 +1,7 @@
-﻿using Core.Application.DTOs;
-using Core.Domain.Entities;
+﻿using Core.Domain.Entities;
 using Core.Domain.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -46,7 +40,7 @@ namespace Infrastructure.Repositories
         {
             var matricula = await _context.Matriculas
                 .Include(m => m.Aluno)
-                .Include(m => m.Curso)
+                .Include(m => m.Turma)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             return matricula;
@@ -59,7 +53,7 @@ namespace Infrastructure.Repositories
             if (matriculaEditada != null)
             {
                 matriculaEditada.AlunoId = matricula.AlunoId;
-                matriculaEditada.CursoId = matricula.CursoId;
+                matriculaEditada.TurmaId = matricula.TurmaId;
                 matriculaEditada.DataMatricula = matricula.DataMatricula;
 
                 await _context.SaveChangesAsync();
@@ -71,19 +65,25 @@ namespace Infrastructure.Repositories
             return await _context.Matriculas
                 .Where(m => m.AlunoId == alunoId)
                 .Include(m => m.Aluno)
-                .Include(m => m.Curso)
+                .Include(m => m.Turma)
                 .AsNoTracking()
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Matricula>> GetByCourseIdAsync(int cursoId)
+        public async Task<IEnumerable<Matricula>> GetByTeamIdAsync(int turmaId)
         {
             return await _context.Matriculas
-                .Where(m => m.CursoId == cursoId)
+                .Where(m => m.TurmaId == turmaId)
                 .Include(m => m.Aluno)
-                .Include(m => m.Curso)
+                .Include(m => m.Turma)
                 .AsNoTracking()
                 .ToListAsync();
+        }
+
+        public async Task<bool> IsStudentAlreadyEnrolledAsync(int alunoId, int turmaId)
+        {
+            return await _context.Matriculas
+                .AnyAsync(m => m.AlunoId == alunoId && m.TurmaId == turmaId);
         }
     }
 }

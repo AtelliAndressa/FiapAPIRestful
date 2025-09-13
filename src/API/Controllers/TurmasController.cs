@@ -8,17 +8,17 @@ namespace API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class CursosController : ControllerBase
+public class TurmasController : ControllerBase
 {
-    private readonly ICursoService _cursoService;
+    private readonly ITurmaService _TurmaService;
 
-    public CursosController(ICursoService cursoService)
+    public TurmasController(ITurmaService TurmaService)
     {
-        _cursoService = cursoService;
+        _TurmaService = TurmaService;
     }
 
     /// <summary>
-    /// Retorna um curso pelo seu identificador único.
+    /// Retorna um Turma pelo seu identificador único.
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
@@ -26,61 +26,61 @@ public class CursosController : ControllerBase
     [Authorize(Policy = "AdminOrUser")]
     public async Task<IActionResult> GetById(int id)
     {
-        var curso = await _cursoService.GetByIdAsync(id);
+        var Turma = await _TurmaService.GetByIdAsync(id);
 
-        if (curso == null)
+        if (Turma == null)
         {
             return NotFound();
         }
 
-        return Ok(curso);
+        return Ok(Turma);
     }
 
     /// <summary>
-    /// Retorna todas os cursos cadastrados no sistema.
+    /// Retorna todas os Turmas cadastrados no sistema.
     /// </summary>
     /// <returns></returns>
     [HttpGet]
     [Authorize(Policy = "AdminOrUser")]
     public async Task<IActionResult> GetAll()
     {
-        var cursos = await _cursoService.GetAllAsync();
+        var Turmas = await _TurmaService.GetAllAsync();
 
-        return Ok(cursos);
+        return Ok(Turmas);
     }
 
     /// <summary>
-    /// Cria um novo registro de um curso.
+    /// Cria um novo registro de um Turma.
     /// Só pode ser executado por um Administrador. 
     /// </summary>
-    /// <param name="createCursoDto"></param>
+    /// <param name="createTurmaDto"></param>
     /// <returns></returns>
     [HttpPost]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> Post([FromBody] CursoDto createCursoDto)
+    public async Task<IActionResult> Post([FromBody] TurmaDto createTurmaDto)
     {
-        await _cursoService.AddAsync(createCursoDto);
+        await _TurmaService.AddAsync(createTurmaDto);
 
         return CreatedAtAction(nameof(GetAll), null);
     }
 
     /// <summary>
-    /// Atualiza um registro de um curso.
+    /// Atualiza um registro de um Turma.
     /// Só pode ser executado por um Administrador.
     /// </summary>
-    /// <param name="cursoDto"></param>
+    /// <param name="TurmaDto"></param>
     /// <returns></returns>
     [HttpPut("{id}")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> Put([FromBody] CursoDto cursoDto)
+    public async Task<IActionResult> Put([FromBody] TurmaDto TurmaDto)
     {
-        await _cursoService.UpdateAsync(cursoDto);
+        await _TurmaService.UpdateAsync(TurmaDto);
 
         return NoContent();
     }
 
     /// <summary>
-    /// Deleta o registro do curso usando um id específico.
+    /// Deleta o registro do Turma usando um id específico.
     /// Só pode ser executado por um Administrador.
     /// </summary>
     /// <param name="id"></param>
@@ -89,7 +89,7 @@ public class CursosController : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Delete(int id)
     {
-        await _cursoService.DeleteAsync(id);
+        await _TurmaService.DeleteAsync(id);
         return NoContent();
     }
 }

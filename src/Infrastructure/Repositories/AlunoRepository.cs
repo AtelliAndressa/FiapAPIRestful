@@ -2,11 +2,6 @@
 using Core.Domain.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -46,6 +41,11 @@ namespace Infrastructure.Repositories
             var aluno = await _context.Alunos
                 .FirstOrDefaultAsync(a => a.Id == id);
 
+            if (aluno == null)
+            {
+                throw new Exception("Aluno não encontrado");
+            }
+            
             return aluno;
         }
 
@@ -57,6 +57,8 @@ namespace Infrastructure.Repositories
             {
                 alunoEditado.Nome = aluno.Nome;
                 alunoEditado.Email = aluno.Email;
+                alunoEditado.Cpf = aluno.Cpf;
+                alunoEditado.DataNascimento = aluno.DataNascimento;
 
                 await _context.SaveChangesAsync();
             }

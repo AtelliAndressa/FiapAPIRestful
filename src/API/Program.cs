@@ -48,8 +48,8 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 builder.Services.AddScoped<IAlunoService, AlunoService>();
-builder.Services.AddScoped<ICursoRepository, CursoRepository>();
-builder.Services.AddScoped<ICursoService, CursoService>();
+builder.Services.AddScoped<ITurmaRepository, TurmaRepository>();
+builder.Services.AddScoped<ITurmaService, TurmaService>();
 builder.Services.AddScoped<IMatriculaRepository, MatriculaRepository>();
 builder.Services.AddScoped<IMatriculaService, MatriculaService>();
 

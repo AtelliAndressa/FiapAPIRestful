@@ -17,6 +17,6 @@ namespace Core.Application.Interfaces
 
         Task<IEnumerable<MatriculaDto>> GetByStudentIdAsync(int studentId);
 
-        Task<IEnumerable<MatriculaDto>> GetByCourseIdAsync(int courseId);
+        Task<IEnumerable<MatriculaDto>> GetByTeamIdAsync(int courseId);
     }
 }

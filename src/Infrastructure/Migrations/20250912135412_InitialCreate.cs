@@ -67,7 +67,7 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Cursos",
+                name: "Turmas",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -77,7 +77,7 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cursos", x => x.Id);
+                    table.PrimaryKey("PK_Turmas", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -193,7 +193,7 @@ namespace Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AlunoId = table.Column<int>(type: "int", nullable: false),
-                    CursoId = table.Column<int>(type: "int", nullable: false),
+                    TurmaId = table.Column<int>(type: "int", nullable: false),
                     DataMatricula = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -206,9 +206,9 @@ namespace Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Matriculas_Cursos_CursoId",
-                        column: x => x.CursoId,
-                        principalTable: "Cursos",
+                        name: "FK_Matriculas_Turmas_TurmaId",
+                        column: x => x.TurmaId,
+                        principalTable: "Turmas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -258,9 +258,9 @@ namespace Infrastructure.Migrations
                 column: "AlunoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Matriculas_CursoId",
+                name: "IX_Matriculas_TurmaId",
                 table: "Matriculas",
-                column: "CursoId");
+                column: "TurmaId");
         }
 
         /// <inheritdoc />
@@ -294,7 +294,7 @@ namespace Infrastructure.Migrations
                 name: "Alunos");
 
             migrationBuilder.DropTable(
-                name: "Cursos");
+                name: "Turmas");
         }
     }
 }

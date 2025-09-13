@@ -50,19 +50,19 @@ public class MatriculasController : ControllerBase
     }
 
     /// <summary>
-    /// Retorna todas as matriculas vinculadas a um curso.
+    /// Retorna todas as matriculas vinculadas a um Turma.
     /// </summary>
-    /// <param name="cursoId"></param>
+    /// <param name="TurmaId"></param>
     /// <returns></returns>
-    [HttpGet("curso/{cursoId:int}")]
+    [HttpGet("Turma/{TurmaId:int}")]
     [Authorize(Policy = "AdminOrUser")]
-    public async Task<IActionResult> GetByCursoId(int cursoId)
+    public async Task<IActionResult> GetByTurmaId(int TurmaId)
     {
-        var matriculas = await _matriculaService.GetByCourseIdAsync(cursoId);
+        var matriculas = await _matriculaService.GetByTeamIdAsync(TurmaId);
 
         if (!matriculas.Any())
         {
-            return NotFound("Nenhuma matrícula encontrada para este curso.");
+            return NotFound("Nenhuma matrícula encontrada para este Turma.");
         }
 
         return Ok(matriculas);

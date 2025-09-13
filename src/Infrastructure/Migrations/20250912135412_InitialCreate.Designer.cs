@@ -53,7 +53,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Alunos");
                 });
 
-            modelBuilder.Entity("Core.Domain.Entities.Curso", b =>
+            modelBuilder.Entity("Core.Domain.Entities.Turma", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -71,7 +71,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cursos");
+                    b.ToTable("Turmas");
                 });
 
             modelBuilder.Entity("Core.Domain.Entities.Matricula", b =>
@@ -85,7 +85,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("AlunoId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CursoId")
+                    b.Property<int>("TurmaId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DataMatricula")
@@ -95,7 +95,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("AlunoId");
 
-                    b.HasIndex("CursoId");
+                    b.HasIndex("TurmaId");
 
                     b.ToTable("Matriculas");
                 });
@@ -306,15 +306,15 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Domain.Entities.Curso", "Curso")
+                    b.HasOne("Core.Domain.Entities.Turma", "Turma")
                         .WithMany()
-                        .HasForeignKey("CursoId")
+                        .HasForeignKey("TurmaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Aluno");
 
-                    b.Navigation("Curso");
+                    b.Navigation("Turma");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

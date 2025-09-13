@@ -113,7 +113,7 @@ public class AuthController : ControllerBase
     /// </summary>
     /// <remarks>
     /// Este método valida as credenciais fornecidas (usuário e senha) e, caso sejam válidas,
-    /// retorna um token JWT que poderá ser utilizado para acessar recursos protegidos da API.
+    /// retorna um token JWT que poderá ser utilizado para acessar reTurmas protegidos da API.
     /// 
     /// O token gerado expira em 3 horas a partir da autenticação.
     /// </remarks>
