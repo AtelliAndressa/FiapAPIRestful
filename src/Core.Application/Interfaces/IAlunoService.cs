@@ -9,7 +9,7 @@ namespace Core.Application.Interfaces
 
         Task<PagedResult<AlunoDto>> GetAllAsync(int pageNumber, int pageSize);
 
-        Task AddAsync(AlunoDto alunoDto);
+        Task AddAsync(CreateAlunoDto alunoDto);
 
         Task UpdateAsync(AlunoDto alunoDto);
 

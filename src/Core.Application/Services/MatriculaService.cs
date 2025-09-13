@@ -40,6 +40,11 @@ namespace Core.Application.Services
                 throw new ValidationException("Turma não encontrada. Por favor cadastre a turma antes de efetuar a matrícula.");
             }
 
+            if (matriculaDto.DataMatricula == default)
+            {
+                throw new ValidationException("Data da matrícula é obrigatória.");
+            }
+
             bool jaMatriculado = await _matriculaRepository.IsStudentAlreadyEnrolledAsync(matriculaDto.AlunoId, matriculaDto.TurmaId);
 
             if (jaMatriculado)
@@ -70,7 +75,7 @@ namespace Core.Application.Services
 
             if (existingMatricula == null)
             {
-                return;
+                throw new ValidationException("Matrícula não encontrada.");
             }
 
             existingMatricula.AlunoId = matricula.Aluno.Id;
@@ -100,7 +105,7 @@ namespace Core.Application.Services
 
             if (matricula == null)
             {
-                return null;
+                throw new ValidationException("Matrícula não encontrada.");
             }
 
             return new MatriculaDto(
@@ -111,61 +116,35 @@ namespace Core.Application.Services
             );
         }
 
-        public async Task<PagedResult<MatriculaDto>> GetAllAsync(int pageNumber, int pageSize)
+        private List<MatriculaDto> MapToDto(List<Matricula> matriculas)
         {
-            PagedResult<Matricula> pagedResultEntity = await _matriculaRepository.GetAllAsync(pageNumber, pageSize);
-
-            List<MatriculaDto> itemsDto = pagedResultEntity.Items.Select(m => new MatriculaDto(
+            return matriculas.Select(m => new MatriculaDto(
                 m.Id,
                 new AlunoDto(m.Aluno.Id, m.Aluno.Nome, m.Aluno.Cpf, m.Aluno.Email, m.Aluno.DataNascimento),
                 new TurmaDto(m.Turma.Id, m.Turma.Nome, m.Turma.Descricao),
                 m.DataMatricula
             )).ToList();
+        }
 
-            return new PagedResult<MatriculaDto>(
-                itemsDto,
-                pagedResultEntity.TotalCount,
-                pagedResultEntity.PageNumber,
-                pagedResultEntity.PageSize
-            );
+        public async Task<PagedResult<MatriculaDto>> GetAllAsync(int pageNumber, int pageSize)
+        {
+            var pagedResult = await _matriculaRepository.GetAllAsync(pageNumber, pageSize);
+            var itemsDto = MapToDto(pagedResult.Items);
+            return new PagedResult<MatriculaDto>(itemsDto, pagedResult.TotalCount, pageNumber, pageSize);
         }
 
         public async Task<PagedResult<MatriculaDto>> GetByStudentIdAsync(int alunoId, int pageNumber, int pageSize)
         {
-            PagedResult<Matricula> pagedResultEntity = await _matriculaRepository.GetByStudentIdAsync(alunoId, pageNumber, pageSize);
-
-            List<MatriculaDto> itemsDto = pagedResultEntity.Items.Select(m => new MatriculaDto(
-                m.Id,
-                new AlunoDto(m.Aluno.Id, m.Aluno.Nome, m.Aluno.Cpf, m.Aluno.Email, m.Aluno.DataNascimento),
-                new TurmaDto(m.Turma.Id, m.Turma.Nome, m.Turma.Descricao),
-                m.DataMatricula
-            )).ToList();
-
-            return new PagedResult<MatriculaDto>(
-                itemsDto,
-                pagedResultEntity.TotalCount,
-                pagedResultEntity.PageNumber,
-                pagedResultEntity.PageSize
-            );
+            var pagedResult = await _matriculaRepository.GetByStudentIdAsync(alunoId, pageNumber, pageSize);
+            var itemsDto = MapToDto(pagedResult.Items);
+            return new PagedResult<MatriculaDto>(itemsDto, pagedResult.TotalCount, pageNumber, pageSize);
         }
 
-        public async Task<PagedResult<MatriculaDto>> GetByTeamIdAsync(int courseId, int pageNumber, int pageSize)
+        public async Task<PagedResult<MatriculaDto>> GetByTeamIdAsync(int turmaId, int pageNumber, int pageSize)
         {
-            PagedResult<Matricula> pagedResultEntity = await _matriculaRepository.GetByTeamIdAsync(courseId, pageNumber, pageSize);
-
-            List<MatriculaDto> itemsDto = pagedResultEntity.Items.Select(m => new MatriculaDto(
-                m.Id,
-                new AlunoDto(m.Aluno.Id, m.Aluno.Nome, m.Aluno.Cpf, m.Aluno.Email, m.Aluno.DataNascimento),
-                new TurmaDto(m.Turma.Id, m.Turma.Nome, m.Turma.Descricao),
-                m.DataMatricula
-            )).ToList();
-
-            return new PagedResult<MatriculaDto>(
-                itemsDto,
-                pagedResultEntity.TotalCount,
-                pagedResultEntity.PageNumber,
-                pagedResultEntity.PageSize
-            );
+            var pagedResult = await _matriculaRepository.GetByTeamIdAsync(turmaId, pageNumber, pageSize);
+            var itemsDto = MapToDto(pagedResult.Items);
+            return new PagedResult<MatriculaDto>(itemsDto, pagedResult.TotalCount, pageNumber, pageSize);
         }
     }
 }

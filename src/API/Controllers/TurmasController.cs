@@ -58,7 +58,7 @@ public class TurmasController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> Post([FromBody] TurmaDto createTurmaDto)
+    public async Task<IActionResult> Post([FromBody] CreateTurmaDto createTurmaDto)
     {
         await _turmaService.AddAsync(createTurmaDto);
 

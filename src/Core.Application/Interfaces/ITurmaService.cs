@@ -9,7 +9,7 @@ namespace Core.Application.Interfaces
 
         Task<PagedResult<TurmaDto>> GetAllAsync(int pageNumber, int pageSize);
 
-        Task AddAsync(TurmaDto turmaDto);
+        Task AddAsync(CreateTurmaDto turmaDto);
 
         Task UpdateAsync(TurmaDto turmaDto);
 

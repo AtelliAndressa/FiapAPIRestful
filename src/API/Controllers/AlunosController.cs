@@ -58,7 +58,7 @@ public class AlunosController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> Post([FromBody] AlunoDto createAlunoDto)
+    public async Task<IActionResult> Post([FromBody] CreateAlunoDto createAlunoDto)
     {
         await _alunoService.AddAsync(createAlunoDto);
 

@@ -15,8 +15,8 @@ namespace Core.Application.Interfaces
 
         Task<PagedResult<MatriculaDto>> GetAllAsync(int pageNumber, int pageSize);
 
-        Task<PagedResult<MatriculaDto>> GetByStudenIdAsync(int alunoId, int pageNumber, int pageSize);
+        Task<PagedResult<MatriculaDto>> GetByStudentIdAsync(int alunoId, int pageNumber, int pageSize);
 
-        Task<PagedResult<MatriculaDto>> GetByTeamIdAsync(int alunoId, int pageNumber, int pageSize);
+        Task<PagedResult<MatriculaDto>> GetByTeamIdAsync(int turmaId, int pageNumber, int pageSize);
     }
 }

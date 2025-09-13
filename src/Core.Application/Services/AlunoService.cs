@@ -15,7 +15,7 @@ namespace Core.Application.Services
             _alunoRepository = alunoRepository;
         }
 
-        public async Task AddAsync(AlunoDto alunoDto)
+        public async Task AddAsync(CreateAlunoDto alunoDto)
         {
             Aluno alunoExists = await _alunoRepository.GetByCpfAsync(alunoDto.Cpf);
 

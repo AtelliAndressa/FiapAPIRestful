@@ -15,7 +15,7 @@ namespace Core.Application.Services
             _turmaRepository = turmaRepository;
         }
 
-        public async Task AddAsync(TurmaDto turmaDto)
+        public async Task AddAsync(CreateTurmaDto turmaDto)
         {
             bool turmaExists = await _turmaRepository.IsTeamAsync(turmaDto.Nome);
 
