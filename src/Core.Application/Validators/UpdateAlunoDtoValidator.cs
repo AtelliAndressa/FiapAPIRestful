@@ -25,9 +25,4 @@ public class UpdateAlunoDtoValidator : AbstractValidator<UpdateAlunoDto>
             .Must(ValidatorsTool.IsValidBirthDate)
             .WithMessage("A data de nascimento deve ser no passado.");
     }
-
-    private bool BeAValidDate(DateTime date)
-    {
-        return date != default && date < DateTime.Now;
-    }
 }
