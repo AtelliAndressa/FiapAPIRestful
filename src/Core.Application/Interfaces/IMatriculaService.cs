@@ -9,7 +9,7 @@ namespace Core.Application.Interfaces
 
         Task<IEnumerable<MatriculaDto>> GetAllAsync();
 
-        Task AddAsync(MatriculaDto matricula);
+        Task<MatriculaDto> AddAsync(CreateMatriculaDto matricula);
 
         Task UpdateAsync(MatriculaDto matricula);
 

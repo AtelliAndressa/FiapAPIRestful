@@ -39,7 +39,7 @@ namespace Core.Application.Services
                 throw new ValidationException("Turma não encontrada. Por favor cadastre a turma antes de efetuar a matrícula.");
             }
 
-            var jaMatriculado = await _matriculaRepository.IsStudentAlreadyEnrolledAsync(matriculaDto.AlunoId, matriculaDto.TurmaId);
+            bool jaMatriculado = await _matriculaRepository.IsStudentAlreadyEnrolledAsync(matriculaDto.AlunoId, matriculaDto.TurmaId);
 
             if (jaMatriculado)
             {
@@ -72,8 +72,8 @@ namespace Core.Application.Services
                 return;
             }
 
-            existingMatricula.AlunoId = matricula.AlunoId;
-            existingMatricula.TurmaId = matricula.TurmaId;
+            existingMatricula.AlunoId = matricula.Aluno.Id;
+            existingMatricula.TurmaId = matricula.Turma.Id;
             existingMatricula.DataMatricula = matricula.DataMatricula;
                 
             await _matriculaRepository.UpdateAsync(existingMatricula);
@@ -114,21 +114,36 @@ namespace Core.Application.Services
                 return null;
             }
 
-            return new MatriculaDto(matricula.Id, matricula.AlunoId, matricula.TurmaId, matricula.DataMatricula);
+            return new MatriculaDto(
+                matricula.Id,
+                new AlunoDto(matricula.Aluno.Id, matricula.Aluno.Nome, matricula.Aluno.Cpf, matricula.Aluno.Email, matricula.Aluno.DataNascimento),
+                new TurmaDto(matricula.Turma.Id, matricula.Turma.Nome, matricula.Turma.Descricao),
+                matricula.DataMatricula
+            );
         }
 
         public async Task<IEnumerable<MatriculaDto>> GetByStudentIdAsync(int studentId)
         {
             IEnumerable<Matricula> matriculas = await _matriculaRepository.GetByAlunoIdAsync(studentId);
 
-            return matriculas.Select(m => new MatriculaDto(m.Id, m.AlunoId, m.TurmaId, m.DataMatricula));
+            return matriculas.Select(m => new MatriculaDto(
+                m.Id,
+                new AlunoDto(m.Aluno.Id, m.Aluno.Nome, m.Aluno.Cpf, m.Aluno.Email, m.Aluno.DataNascimento),
+                new TurmaDto(m.Turma.Id, m.Turma.Nome, m.Turma.Descricao),
+                m.DataMatricula
+            ));
         }
 
         public async Task<IEnumerable<MatriculaDto>> GetByTeamIdAsync(int courseId)
         {
             IEnumerable<Matricula> matriculas = await _matriculaRepository.GetByTeamIdAsync(courseId);
 
-            return matriculas.Select(m => new MatriculaDto(m.Id, m.AlunoId, m.TurmaId, m.DataMatricula));
+            return matriculas.Select(m => new MatriculaDto(
+                m.Id,
+                new AlunoDto(m.Aluno.Id, m.Aluno.Nome, m.Aluno.Cpf, m.Aluno.Email, m.Aluno.DataNascimento),
+                new TurmaDto(m.Turma.Id, m.Turma.Nome, m.Turma.Descricao),
+                m.DataMatricula
+            ));
         }
     }
 }

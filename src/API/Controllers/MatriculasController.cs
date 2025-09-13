@@ -76,7 +76,7 @@ public class MatriculasController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> Post([FromBody] MatriculaDto matriculaDto)
+    public async Task<IActionResult> Post([FromBody] CreateMatriculaDto matriculaDto)
     {
 
         await _matriculaService.AddAsync(matriculaDto);
