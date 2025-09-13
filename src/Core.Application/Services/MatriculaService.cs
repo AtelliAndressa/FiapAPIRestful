@@ -1,5 +1,6 @@
 ﻿using Core.Application.DTOs;
 using Core.Application.Interfaces;
+using Core.Domain.Common;
 using Core.Domain.Entities;
 using Core.Domain.Interfaces;
 using System.ComponentModel.DataAnnotations;
@@ -65,7 +66,7 @@ namespace Core.Application.Services
 
         public async Task UpdateAsync(MatriculaDto matricula)
         {
-            var existingMatricula = await _matriculaRepository.GetByIdAsync(matricula.Id);
+            Matricula existingMatricula = await _matriculaRepository.GetByIdAsync(matricula.Id);
 
             if (existingMatricula == null)
             {
@@ -93,18 +94,6 @@ namespace Core.Application.Services
             return true;
         }
 
-        public async Task<IEnumerable<MatriculaDto>> GetAllAsync()
-        {
-            IEnumerable<Matricula> matriculas = await _matriculaRepository.GetAllAsync();
-
-            return matriculas.Select(m => new MatriculaDto(
-                m.Id,
-                new AlunoDto(m.AlunoId, m.Aluno.Nome, m.Aluno.Cpf, m.Aluno.Email, m.Aluno.DataNascimento),
-                new TurmaDto(m.Turma.Id, m.Turma.Nome, m.Turma.Descricao),
-                m.DataMatricula
-            ));
-        }
-
         public async Task<MatriculaDto> GetByIdAsync(int id)
         {
             Matricula matricula = await _matriculaRepository.GetByIdAsync(id);
@@ -122,16 +111,42 @@ namespace Core.Application.Services
             );
         }
 
-        public async Task<IEnumerable<MatriculaDto>> GetByStudentIdAsync(int studentId)
+        public async Task<PagedResult<MatriculaDto>> GetAllAsync(int pageNumber, int pageSize)
         {
-            IEnumerable<Matricula> matriculas = await _matriculaRepository.GetByAlunoIdAsync(studentId);
+            PagedResult<Matricula> pagedResultEntity = await _matriculaRepository.GetAllAsync(pageNumber, pageSize);
 
-            return matriculas.Select(m => new MatriculaDto(
+            List<MatriculaDto> itemsDto = pagedResultEntity.Items.Select(m => new MatriculaDto(
                 m.Id,
                 new AlunoDto(m.Aluno.Id, m.Aluno.Nome, m.Aluno.Cpf, m.Aluno.Email, m.Aluno.DataNascimento),
                 new TurmaDto(m.Turma.Id, m.Turma.Nome, m.Turma.Descricao),
                 m.DataMatricula
-            ));
+            )).ToList();
+
+            return new PagedResult<MatriculaDto>(
+                itemsDto,
+                pagedResultEntity.TotalCount,
+                pagedResultEntity.PageNumber,
+                pagedResultEntity.PageSize
+            );
+        }
+
+        public async Task<PagedResult<MatriculaDto>> GetByStudentIdAsync(int alunoId, int pageNumber, int pageSize)
+        {
+            PagedResult<Matricula> pagedResultEntity = await _matriculaRepository.GetByStudentIdAsync(alunoId, pageNumber, pageSize);
+
+            List<MatriculaDto> itemsDto = pagedResultEntity.Items.Select(m => new MatriculaDto(
+                m.Id,
+                new AlunoDto(m.Aluno.Id, m.Aluno.Nome, m.Aluno.Cpf, m.Aluno.Email, m.Aluno.DataNascimento),
+                new TurmaDto(m.Turma.Id, m.Turma.Nome, m.Turma.Descricao),
+                m.DataMatricula
+            )).ToList();
+
+            return new PagedResult<MatriculaDto>(
+                itemsDto,
+                pagedResultEntity.TotalCount,
+                pagedResultEntity.PageNumber,
+                pagedResultEntity.PageSize
+            );
         }
 
         public async Task<IEnumerable<MatriculaDto>> GetByTeamIdAsync(int courseId)

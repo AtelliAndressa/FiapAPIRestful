@@ -1,5 +1,6 @@
 ﻿using Core.Application.DTOs;
 using Core.Application.Interfaces;
+using Core.Domain.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,7 +27,7 @@ public class AlunosController : ControllerBase
     [Authorize(Policy = "AdminOrUser")]
     public async Task<IActionResult> GetById(int id)
     {
-        var aluno = await _alunoService.GetByIdAsync(id);
+        AlunoDto aluno = await _alunoService.GetByIdAsync(id);
 
         if (aluno == null)
         {
@@ -42,9 +43,9 @@ public class AlunosController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Authorize(Policy = "AdminOrUser")]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
-        var alunos = await _alunoService.GetAllAsync();
+        PagedResult<AlunoDto> alunos = await _alunoService.GetAllAsync(pageNumber, pageSize);
 
         return Ok(alunos);
     }
@@ -89,7 +90,7 @@ public class AlunosController : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Delete(int id)
     {
-        var result = await _alunoService.DeleteAsync(id);
+        bool result = await _alunoService.DeleteAsync(id);
 
         if (!result)
         {

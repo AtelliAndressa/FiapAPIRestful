@@ -1,5 +1,5 @@
 ﻿using Core.Application.DTOs;
-using Core.Domain.Entities;
+using Core.Domain.Common;
 
 namespace Core.Application.Interfaces
 {
@@ -7,16 +7,16 @@ namespace Core.Application.Interfaces
     {
         Task<MatriculaDto> GetByIdAsync(int id);
 
-        Task<IEnumerable<MatriculaDto>> GetAllAsync();
-
         Task<MatriculaDto> AddAsync(CreateMatriculaDto matricula);
 
         Task UpdateAsync(MatriculaDto matricula);
 
         Task<bool> DeleteAsync(int id);
 
-        Task<IEnumerable<MatriculaDto>> GetByStudentIdAsync(int studentId);
+        Task<PagedResult<MatriculaDto>> GetAllAsync(int pageNumber, int pageSize);
 
-        Task<IEnumerable<MatriculaDto>> GetByTeamIdAsync(int courseId);
+        Task<PagedResult<MatriculaDto>> GetByStudenIdAsync(int alunoId, int pageNumber, int pageSize);
+
+        Task<PagedResult<MatriculaDto>> GetByTeamIdAsync(int alunoId, int pageNumber, int pageSize);
     }
 }

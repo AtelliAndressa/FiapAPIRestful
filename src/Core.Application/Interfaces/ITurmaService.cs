@@ -1,4 +1,5 @@
 ﻿using Core.Application.DTOs;
+using Core.Domain.Common;
 
 namespace Core.Application.Interfaces
 {
@@ -6,11 +7,11 @@ namespace Core.Application.Interfaces
     {
         Task<TurmaDto> GetByIdAsync(int id);
 
-        Task<IEnumerable<TurmaDto>> GetAllAsync();
+        Task<PagedResult<TurmaDto>> GetAllAsync(int pageNumber, int pageSize);
 
-        Task AddAsync(TurmaDto TurmaDto);
+        Task AddAsync(TurmaDto turmaDto);
 
-        Task UpdateAsync(TurmaDto TurmaDto);
+        Task UpdateAsync(TurmaDto turmaDto);
 
         Task<bool> DeleteAsync(int id);
     }

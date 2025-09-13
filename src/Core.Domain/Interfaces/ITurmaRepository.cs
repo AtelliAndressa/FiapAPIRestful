@@ -1,4 +1,5 @@
-﻿using Core.Domain.Entities;
+﻿using Core.Domain.Common;
+using Core.Domain.Entities;
 
 namespace Core.Domain.Interfaces
 {
@@ -6,7 +7,7 @@ namespace Core.Domain.Interfaces
     {
         Task<Turma> GetByIdAsync(int id);
 
-        Task<IEnumerable<Turma>> GetAllAsync();
+        Task<PagedResult<Turma>> GetAllAsync(int pageNumber, int pageSize);
 
         Task AddAsync(Turma turma);
 

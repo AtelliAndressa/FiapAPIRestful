@@ -1,4 +1,5 @@
 ﻿using Core.Application.DTOs;
+using Core.Domain.Common;
 
 namespace Core.Application.Interfaces
 {
@@ -6,7 +7,7 @@ namespace Core.Application.Interfaces
     {
         Task<AlunoDto> GetByIdAsync(int id);
 
-        Task<IEnumerable<AlunoDto>> GetAllAsync();
+        Task<PagedResult<AlunoDto>> GetAllAsync(int pageNumber, int pageSize);
 
         Task AddAsync(AlunoDto alunoDto);
 

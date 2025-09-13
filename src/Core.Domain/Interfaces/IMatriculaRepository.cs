@@ -1,4 +1,5 @@
-﻿using Core.Domain.Entities;
+﻿using Core.Domain.Common;
+using Core.Domain.Entities;
 
 namespace Core.Domain.Interfaces
 {
@@ -6,7 +7,7 @@ namespace Core.Domain.Interfaces
     {
         Task<Matricula> GetByIdAsync(int id);
 
-        Task<IEnumerable<Matricula>> GetAllAsync();
+        Task<PagedResult<Matricula>> GetAllAsync(int pageNumber, int pageSize);
 
         Task AddAsync(Matricula matricula);
 
@@ -14,9 +15,9 @@ namespace Core.Domain.Interfaces
 
         Task DeleteAsync(int id);
 
-        Task<IEnumerable<Matricula>> GetByAlunoIdAsync(int alunoId);
+        Task<PagedResult<Matricula>> GetByStudentIdAsync(int alunoId, int pageNumber, int pageSize);
 
-        Task<IEnumerable<Matricula>> GetByTeamIdAsync(int turmaId);
+        Task<PagedResult<Matricula>> GetByTeamIdAsync(int turmaId, int pageNumber, int pageSize);
 
         Task<bool> IsStudentAlreadyEnrolledAsync(int alunoId, int turmaId);
     }

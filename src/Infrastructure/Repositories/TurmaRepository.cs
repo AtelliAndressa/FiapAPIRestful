@@ -1,4 +1,5 @@
-﻿using Core.Domain.Entities;
+﻿using Core.Domain.Common;
+using Core.Domain.Entities;
 using Core.Domain.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -14,34 +15,23 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task AddAsync(Turma turma)
+        public async Task<PagedResult<Turma>> GetAllAsync(int pageNumber, int pageSize)
         {
-            await _context.Turmas.AddAsync(turma);
+            int totalCount = await _context.Turmas.CountAsync();
 
-            await _context.SaveChangesAsync();
-        }
+            List<Turma> items = await _context.Turmas
+                .OrderBy(t => t.Nome)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .AsNoTracking()
+                .ToListAsync();
 
-        public async Task DeleteAsync(int id)
-        {
-            var turma = await _context.Turmas.FindAsync(id);
-
-            if (turma != null)
-            {
-                _context.Turmas.Remove(turma);
-
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        public async Task<IEnumerable<Turma>> GetAllAsync()
-        {
-            return await _context.Turmas.ToListAsync();
+            return new PagedResult<Turma>(items, totalCount, pageNumber, pageSize);
         }
 
         public async Task<Turma> GetByIdAsync(int id)
         {
-            var turma = await _context.Turmas
-                .FirstOrDefaultAsync(c => c.Id == id);
+            Turma turma = await _context.Turmas.FirstOrDefaultAsync(c => c.Id == id);
 
             if (turma == null)
             {
@@ -51,14 +41,33 @@ namespace Infrastructure.Repositories
             return turma;
         }
 
+        public async Task AddAsync(Turma turma)
+        {
+            await _context.Turmas.AddAsync(turma);
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task UpdateAsync(Turma turma)
         {
-            var turmaEditado = await _context.Turmas.FindAsync(turma.Id);
+            Turma turmaEditado = await _context.Turmas.FindAsync(turma.Id);
             
             if (turmaEditado != null)
             {
                 turmaEditado.Nome = turma.Nome;
                 turmaEditado.Descricao = turma.Descricao;
+
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            Turma turma = await _context.Turmas.FindAsync(id);
+
+            if (turma != null)
+            {
+                _context.Turmas.Remove(turma);
 
                 await _context.SaveChangesAsync();
             }

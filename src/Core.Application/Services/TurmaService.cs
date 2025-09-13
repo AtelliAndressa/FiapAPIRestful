@@ -1,5 +1,6 @@
 ﻿using Core.Application.DTOs;
 using Core.Application.Interfaces;
+using Core.Domain.Common;
 using Core.Domain.Entities;
 using Core.Domain.Interfaces;
 
@@ -7,11 +8,11 @@ namespace Core.Application.Services
 {
     public class TurmaService : ITurmaService
     {
-        private readonly ITurmaRepository _TurmaRepository;
+        private readonly ITurmaRepository _turmaRepository;
 
-        public TurmaService(ITurmaRepository TurmaRepository)
+        public TurmaService(ITurmaRepository turmaRepository)
         {
-            _TurmaRepository = TurmaRepository;
+            _turmaRepository = turmaRepository;
         }
 
         public async Task AddAsync(TurmaDto turmaDto)
@@ -22,33 +23,42 @@ namespace Core.Application.Services
                 Descricao = turmaDto.Descricao
             };
 
-            await _TurmaRepository.AddAsync(turma);
+            await _turmaRepository.AddAsync(turma);
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var turma = await _TurmaRepository.GetByIdAsync(id);
+            Turma turma = await _turmaRepository.GetByIdAsync(id);
 
             if (turma == null)
             {
                 return false;
             }
 
-            await _TurmaRepository.DeleteAsync(turma.Id);
+            await _turmaRepository.DeleteAsync(turma.Id);
 
             return true;
         }
 
-        public async Task<IEnumerable<TurmaDto>> GetAllAsync()
+        public async Task<PagedResult<TurmaDto>> GetAllAsync(int pageNumber, int pageSize)
         {
-            IEnumerable<Turma> turmas = await _TurmaRepository.GetAllAsync();
+            PagedResult<Turma> pagedResultEntity = await _turmaRepository.GetAllAsync(pageNumber, pageSize);
 
-            return turmas.Select(c => new TurmaDto(c.Id, c.Nome, c.Descricao));
+            List<TurmaDto> itemsDto = pagedResultEntity.Items
+                .Select(t => new TurmaDto(t.Id, t.Nome, t.Descricao))
+                .ToList();
+
+            return new PagedResult<TurmaDto>(
+                itemsDto,
+                pagedResultEntity.TotalCount,
+                pagedResultEntity.PageNumber,
+                pagedResultEntity.PageSize
+            );
         }
 
         public async Task<TurmaDto> GetByIdAsync(int id)
         {
-            Turma turma = await _TurmaRepository.GetByIdAsync(id);
+            Turma turma = await _turmaRepository.GetByIdAsync(id);
 
             if (turma == null)
             {
@@ -60,14 +70,14 @@ namespace Core.Application.Services
 
         public async Task UpdateAsync(TurmaDto turmaDto)
         {
-            var turma = await _TurmaRepository.GetByIdAsync(turmaDto.Id);
+            Turma turma = await _turmaRepository.GetByIdAsync(turmaDto.Id);
 
             if (turma != null)
             {
                 turma.Nome = turmaDto.Nome;
                 turma.Descricao = turmaDto.Descricao;
 
-                await _TurmaRepository.UpdateAsync(turma);
+                await _turmaRepository.UpdateAsync(turma);
             }
         }
     }

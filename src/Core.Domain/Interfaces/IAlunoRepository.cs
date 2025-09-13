@@ -1,4 +1,5 @@
-﻿using Core.Domain.Entities;
+﻿using Core.Domain.Common;
+using Core.Domain.Entities;
 
 namespace Core.Domain.Interfaces
 {
@@ -6,7 +7,7 @@ namespace Core.Domain.Interfaces
     {
         Task<Aluno> GetByIdAsync(int id);
 
-        Task<IEnumerable<Aluno>> GetAllAsync();
+        Task<PagedResult<Aluno>> GetAllAsync(int pageNumber, int pageSize);
 
         Task AddAsync(Aluno aluno);
 

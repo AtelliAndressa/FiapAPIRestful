@@ -1,5 +1,6 @@
 ﻿using Core.Application.DTOs;
 using Core.Application.Interfaces;
+using Core.Domain.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,11 +11,11 @@ namespace API.Controllers;
 [Authorize]
 public class TurmasController : ControllerBase
 {
-    private readonly ITurmaService _TurmaService;
+    private readonly ITurmaService _turmaService;
 
-    public TurmasController(ITurmaService TurmaService)
+    public TurmasController(ITurmaService turmaService)
     {
-        _TurmaService = TurmaService;
+        _turmaService = turmaService;
     }
 
     /// <summary>
@@ -26,14 +27,14 @@ public class TurmasController : ControllerBase
     [Authorize(Policy = "AdminOrUser")]
     public async Task<IActionResult> GetById(int id)
     {
-        var Turma = await _TurmaService.GetByIdAsync(id);
+        TurmaDto turma = await _turmaService.GetByIdAsync(id);
 
-        if (Turma == null)
+        if (turma == null)
         {
             return NotFound();
         }
 
-        return Ok(Turma);
+        return Ok(turma);
     }
 
     /// <summary>
@@ -42,11 +43,11 @@ public class TurmasController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Authorize(Policy = "AdminOrUser")]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
-        var Turmas = await _TurmaService.GetAllAsync();
+        PagedResult<TurmaDto> turmas = await _turmaService.GetAllAsync(pageNumber, pageSize);
 
-        return Ok(Turmas);
+        return Ok(turmas);
     }
 
     /// <summary>
@@ -59,7 +60,7 @@ public class TurmasController : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Post([FromBody] TurmaDto createTurmaDto)
     {
-        await _TurmaService.AddAsync(createTurmaDto);
+        await _turmaService.AddAsync(createTurmaDto);
 
         return CreatedAtAction(nameof(GetAll), null);
     }
@@ -72,9 +73,9 @@ public class TurmasController : ControllerBase
     /// <returns></returns>
     [HttpPut("{id}")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> Put([FromBody] TurmaDto TurmaDto)
+    public async Task<IActionResult> Put([FromBody] TurmaDto turmaDto)
     {
-        await _TurmaService.UpdateAsync(TurmaDto);
+        await _turmaService.UpdateAsync(turmaDto);
 
         return NoContent();
     }
@@ -89,7 +90,7 @@ public class TurmasController : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Delete(int id)
     {
-        await _TurmaService.DeleteAsync(id);
+        await _turmaService.DeleteAsync(id);
         return NoContent();
     }
 }

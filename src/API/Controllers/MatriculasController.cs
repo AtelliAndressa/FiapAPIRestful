@@ -1,5 +1,6 @@
 ﻿using Core.Application.DTOs;
 using Core.Application.Interfaces;
+using Core.Domain.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,9 +24,9 @@ public class MatriculasController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Authorize(Policy = "AdminOrUser")]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
-        var matriculas = await _matriculaService.GetAllAsync();
+        PagedResult<MatriculaDto> matriculas = await _matriculaService.GetAllAsync(pageNumber, pageSize);
 
         return Ok(matriculas);
     }
@@ -37,11 +38,11 @@ public class MatriculasController : ControllerBase
     /// <returns></returns>
     [HttpGet("aluno/{alunoId:int}")]
     [Authorize(Policy = "AdminOrUser")]
-    public async Task<IActionResult> GetByAlunoId(int alunoId)
+    public async Task<IActionResult> GetByAlunoId(int alunoId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
-        var matriculas = await _matriculaService.GetByStudentIdAsync(alunoId);
+        PagedResult<MatriculaDto> matriculas = await _matriculaService.GetByStudenIdAsync(alunoId, pageNumber, pageSize);
 
-        if (!matriculas.Any())
+        if (matriculas == null || !matriculas.Items.Any())
         {
             return NotFound("Nenhuma matrícula encontrada para este aluno.");
         }
@@ -56,13 +57,13 @@ public class MatriculasController : ControllerBase
     /// <returns></returns>
     [HttpGet("Turma/{TurmaId:int}")]
     [Authorize(Policy = "AdminOrUser")]
-    public async Task<IActionResult> GetByTurmaId(int TurmaId)
+    public async Task<IActionResult> GetByTeamId(int turmaId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
-        var matriculas = await _matriculaService.GetByTeamIdAsync(TurmaId);
+        PagedResult<MatriculaDto> matriculas = await _matriculaService.GetByStudenIdAsync(turmaId, pageNumber, pageSize);
 
-        if (!matriculas.Any())
+        if (matriculas == null || !matriculas.Items.Any())
         {
-            return NotFound("Nenhuma matrícula encontrada para este Turma.");
+            return NotFound("Nenhuma matrícula encontrada para esta turma.");
         }
 
         return Ok(matriculas);
