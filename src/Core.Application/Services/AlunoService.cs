@@ -3,6 +3,7 @@ using Core.Application.Interfaces;
 using Core.Domain.Common;
 using Core.Domain.Entities;
 using Core.Domain.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace Core.Application.Services
 {
@@ -21,7 +22,7 @@ namespace Core.Application.Services
 
             if (alunoExists != null)
             {
-                throw new Exception("Já existe um aluno cadastrado com este CPF.");
+                throw new ValidationException("Já existe um aluno cadastrado com este CPF.");
             }
 
             Aluno aluno = new Aluno

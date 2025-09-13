@@ -3,6 +3,7 @@ using Core.Domain.Entities;
 using Core.Domain.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Infrastructure.Repositories
 {
@@ -30,17 +31,19 @@ namespace Infrastructure.Repositories
 
         public async Task UpdateAsync(Aluno aluno)
         {
-            Aluno alunoEditado = await _context.Alunos.FindAsync(aluno.Id);
+            Aluno alunoEditado = await _context.Alunos.FirstOrDefaultAsync(a => a.Id == aluno.Id);
 
-            if (alunoEditado != null)
+            if (alunoEditado == null)
             {
-                alunoEditado.Nome = aluno.Nome;
-                alunoEditado.Email = aluno.Email;
-                alunoEditado.Cpf = aluno.Cpf;
-                alunoEditado.DataNascimento = aluno.DataNascimento;
-
-                await _context.SaveChangesAsync();
+                throw new ValidationException("Aluno não encontrado.");
             }
+
+            alunoEditado.Nome = aluno.Nome;
+            alunoEditado.Email = aluno.Email;
+            alunoEditado.Cpf = aluno.Cpf;
+            alunoEditado.DataNascimento = aluno.DataNascimento;
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
@@ -71,11 +74,12 @@ namespace Infrastructure.Repositories
         public async Task<Aluno> GetByIdAsync(int id)
         {
             Aluno aluno = await _context.Alunos
+                .AsNoTracking()
                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (aluno == null)
             {
-                throw new Exception("Aluno não encontrado");
+                throw new ValidationException("Aluno não encontrado.");
             }
             
             return aluno;

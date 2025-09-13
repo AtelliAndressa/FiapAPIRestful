@@ -38,16 +38,17 @@ namespace Infrastructure.Repositories
 
         public async Task UpdateAsync(Matricula matricula)
         {
-            Matricula matriculaEditada = await _context.Matriculas.FindAsync(matricula.Id);
+            Matricula existingMatricula = await _context.Matriculas
+                .FirstOrDefaultAsync(m => m.Id == matricula.Id);
 
-            if (matriculaEditada != null)
+            if (existingMatricula == null)
             {
-                matriculaEditada.AlunoId = matricula.AlunoId;
-                matriculaEditada.TurmaId = matricula.TurmaId;
-                matriculaEditada.DataMatricula = matricula.DataMatricula;
-
-                await _context.SaveChangesAsync();
+                throw new KeyNotFoundException("Matrícula não encontrada.");
             }
+
+            existingMatricula.AlunoId = matricula.AlunoId;
+            existingMatricula.TurmaId = matricula.TurmaId;
+            existingMatricula.DataMatricula = matricula.DataMatricula;
         }
 
         public async Task<bool> IsStudentAlreadyEnrolledAsync(int alunoId, int turmaId)
@@ -106,7 +107,7 @@ namespace Infrastructure.Repositories
         public async Task<PagedResult<Matricula>> GetByTeamIdAsync(int turmaId, int pageNumber, int pageSize)
         {
             IQueryable<Matricula> query = _context.Matriculas
-                .Where(m => m.AlunoId == turmaId);
+                .Where(m => m.TurmaId == turmaId);
 
             int totalCount = await query.CountAsync();
 

@@ -3,6 +3,7 @@ using Core.Application.Interfaces;
 using Core.Domain.Common;
 using Core.Domain.Entities;
 using Core.Domain.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace Core.Application.Services
 {
@@ -21,7 +22,7 @@ namespace Core.Application.Services
 
             if (turmaExists)
             {
-                throw new Exception("Já existe uma turma com este nome.");
+                throw new ValidationException("Já existe uma turma com este nome.");
             }
 
             Turma turma = new Turma
@@ -69,7 +70,7 @@ namespace Core.Application.Services
 
             if (turma == null)
             {
-                return null;
+                throw new ValidationException("Turma não encontrada.");
             }
 
             return new TurmaDto(turma.Id, turma.Nome, turma.Descricao);
@@ -79,13 +80,15 @@ namespace Core.Application.Services
         {
             Turma turma = await _turmaRepository.GetByIdAsync(turmaDto.Id);
 
-            if (turma != null)
+            if (turma == null)
             {
-                turma.Nome = turmaDto.Nome;
-                turma.Descricao = turmaDto.Descricao;
-
-                await _turmaRepository.UpdateAsync(turma);
+                throw new ValidationException("Turma não encontrada.");
             }
+
+            turma.Nome = turmaDto.Nome;
+            turma.Descricao = turmaDto.Descricao;
+
+            await _turmaRepository.UpdateAsync(turma);
         }
     }
 }

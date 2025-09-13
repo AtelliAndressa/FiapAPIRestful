@@ -3,6 +3,7 @@ using Core.Domain.Entities;
 using Core.Domain.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Infrastructure.Repositories
 {
@@ -35,7 +36,7 @@ namespace Infrastructure.Repositories
 
             if (turma == null)
             {
-                throw new KeyNotFoundException("Turma não encontrada.");
+                throw new ValidationException("Turma não encontrada.");
             }
 
             return turma;
@@ -56,15 +57,17 @@ namespace Infrastructure.Repositories
 
         public async Task UpdateAsync(Turma turma)
         {
-            Turma turmaEditado = await _context.Turmas.FindAsync(turma.Id);
-            
-            if (turmaEditado != null)
-            {
-                turmaEditado.Nome = turma.Nome;
-                turmaEditado.Descricao = turma.Descricao;
+            Turma turmaEditada = await _context.Turmas.FindAsync(turma.Id);
 
-                await _context.SaveChangesAsync();
+            if (turmaEditada == null)
+            {
+                throw new ValidationException("Turma não encontrada.");
             }
+
+            turmaEditada.Nome = turma.Nome;
+            turmaEditada.Descricao = turma.Descricao;
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
