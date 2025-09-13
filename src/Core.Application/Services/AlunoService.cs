@@ -113,5 +113,21 @@ namespace Core.Application.Services
                 pagedResultEntity.PageSize
             );
         }
+
+        public async Task<PagedResult<AlunoDto>> SearchByNameAsync(string nome, int pageNumber, int pageSize)
+        {
+            PagedResult<Aluno> pagedResultEntity = await _alunoRepository.SearchByNameAsync(nome, pageNumber, pageSize);
+
+            List<AlunoDto> itemsDto = pagedResultEntity.Items
+                .Select(a => new AlunoDto(a.Id, a.Nome, a.Cpf, a.Email, a.DataNascimento))
+                .ToList();
+
+            return new PagedResult<AlunoDto>(
+                itemsDto,
+                pagedResultEntity.TotalCount,
+                pagedResultEntity.PageNumber,
+                pagedResultEntity.PageSize
+            );
+        }
     }
 }

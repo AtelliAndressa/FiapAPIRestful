@@ -51,6 +51,30 @@ public class AlunosController : ControllerBase
     }
 
     /// <summary>
+    /// Retorna um aluno cadastrado no sitema pelo seu nome.
+    /// </summary>
+    /// <param name="nome"></param>
+    /// <param name="pageNumber"></param>
+    /// <param name="pageSize"></param>
+    /// <returns></returns>
+    [HttpGet("search")]
+    [Authorize(Policy = "AdminOrUser")]
+    public async Task<IActionResult> SearchByName(
+    [FromQuery] string nome,
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10)
+    {
+        if (string.IsNullOrWhiteSpace(nome))
+        {
+            return BadRequest("O parâmetro 'nome' não pode ser vazio.");
+        }
+
+        PagedResult<AlunoDto> alunos = await _alunoService.SearchByNameAsync(nome, pageNumber, pageSize);
+
+        return Ok(alunos);
+    }
+
+    /// <summary>
     /// Cadastra um novo aluno no sistema.
     /// Só pode ser executado por um Administrador.
     /// </summary>

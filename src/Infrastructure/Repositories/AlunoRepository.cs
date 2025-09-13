@@ -71,6 +71,23 @@ namespace Infrastructure.Repositories
             return new PagedResult<Aluno>(items, totalCount, pageNumber, pageSize);
         }
 
+        public async Task<PagedResult<Aluno>> SearchByNameAsync(string nome, int pageNumber, int pageSize)
+        {
+            IQueryable<Aluno> query = _context.Alunos
+                .Where(a => a.Nome.ToLower().Contains(nome.ToLower()));
+
+            int totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(a => a.Nome)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return new PagedResult<Aluno>(items, totalCount, pageNumber, pageSize);
+        }
+
         public async Task<Aluno> GetByIdAsync(int id)
         {
             Aluno aluno = await _context.Alunos

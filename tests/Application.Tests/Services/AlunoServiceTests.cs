@@ -129,6 +129,44 @@ namespace Application.Tests.Services
         }
 
         /// <summary>
+        /// Testa a funcionalidade de busca por nome, garantindo que
+        /// o serviço chame o método correto do repositório e retorne os
+        /// resultados paginados e mapeados corretamente.
+        /// </summary>
+        [Fact]
+        public async Task SearchByNameAsync_WhenMatchesExist_ShouldReturnPaginatedDtos()
+        {
+            var nomeBusca = "Teste";
+
+            int pageNumber = 1;
+
+            int pageSize = 10;
+
+            var fakeAlunoList = new List<Aluno>
+            {
+                new Aluno { Id = 1, Nome = "Aluno Teste 1", Cpf = "111", Email = "a@a.com", DataNascimento = new DateTime(2000, 1, 1) },
+                new Aluno { Id = 2, Nome = "Outro Teste 2", Cpf = "222", Email = "b@b.com", DataNascimento = new DateTime(2001, 1, 1) }
+            };
+
+            var fakeRepoResult = new PagedResult<Aluno>(fakeAlunoList, 2, pageNumber, pageSize);
+
+            _alunoRepoMock.Setup(repo => repo.SearchByNameAsync(nomeBusca, pageNumber, pageSize))
+                          .ReturnsAsync(fakeRepoResult);
+
+            var result = await _alunoService.SearchByNameAsync(nomeBusca, pageNumber, pageSize);
+
+            Assert.NotNull(result);
+            Assert.Equal(2, result.TotalCount);
+            Assert.Equal(pageNumber, result.PageNumber);
+
+
+            Assert.NotNull(result.Items);
+            Assert.Equal(2, result.Items.Count);
+            Assert.Equal("Aluno Teste 1", result.Items[0].Nome);
+            Assert.Equal("Outro Teste 2", result.Items[1].Nome);
+        }
+
+        /// <summary>
         /// Simula o repositório encontrando um aluno com o mesmo CPF e verifica se o serviço impede a criação, 
         /// lançando a ValidationException específica com a mensagem de erro correta.
         /// </summary>
