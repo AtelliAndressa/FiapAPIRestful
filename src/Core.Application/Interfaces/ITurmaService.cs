@@ -11,7 +11,7 @@ namespace Core.Application.Interfaces
 
         Task AddAsync(CreateTurmaDto turmaDto);
 
-        Task UpdateAsync(TurmaDto turmaDto);
+        Task UpdateAsync(int id, UpdateTurmaDto turmaDto);
 
         Task<bool> DeleteAsync(int id);
     }

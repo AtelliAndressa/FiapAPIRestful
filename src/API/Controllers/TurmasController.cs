@@ -73,9 +73,9 @@ public class TurmasController : ControllerBase
     /// <returns></returns>
     [HttpPut("{id}")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> Put([FromBody] TurmaDto turmaDto)
+    public async Task<IActionResult> Put(int id, [FromBody] UpdateTurmaDto turmaDto)
     {
-        await _turmaService.UpdateAsync(turmaDto);
+        await _turmaService.UpdateAsync(id, turmaDto);
 
         return NoContent();
     }

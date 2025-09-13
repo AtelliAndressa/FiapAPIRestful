@@ -12,11 +12,11 @@ namespace Core.Application.Services
     {
         private readonly ITurmaRepository _turmaRepository;
         private readonly IValidator<CreateTurmaDto> _createValidator;
-        private readonly IValidator<TurmaDto> _validator;
+        private readonly IValidator<UpdateTurmaDto> _validator;
 
         public TurmaService(ITurmaRepository turmaRepository,
             IValidator<CreateTurmaDto> createValidator,
-            IValidator<TurmaDto> validator)
+            IValidator<UpdateTurmaDto> validator)
         {
             _turmaRepository = turmaRepository;
             _createValidator = createValidator;
@@ -95,7 +95,7 @@ namespace Core.Application.Services
             return new TurmaDto(turma.Id, turma.Nome, turma.Descricao, 0);
         }
 
-        public async Task UpdateAsync(TurmaDto turmaDto)
+        public async Task UpdateAsync(int id, UpdateTurmaDto turmaDto)
         {
             ValidationResult validationResult = await _validator.ValidateAsync(turmaDto);
 
@@ -104,7 +104,7 @@ namespace Core.Application.Services
                 throw new ValidationException(validationResult.Errors);
             }
 
-            Turma turma = await _turmaRepository.GetByIdAsync(turmaDto.Id);
+            Turma turma = await _turmaRepository.GetByIdAsync(id);
 
             if (turma == null)
             {

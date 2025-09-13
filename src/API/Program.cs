@@ -1,3 +1,4 @@
+using Core.Application.DTOs;
 using Core.Application.Interfaces;
 using Core.Application.Services;
 using Core.Application.Validators;
@@ -15,6 +16,9 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 // 1. Configurar EF Core e Identity
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -27,19 +31,20 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
+})
+    .AddJwtBearer(options =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-    };
-});
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
 
 builder.Services.AddAuthorization(options =>
 {
@@ -48,19 +53,33 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+
 builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 builder.Services.AddScoped<IAlunoService, AlunoService>();
+
 builder.Services.AddScoped<ITurmaRepository, TurmaRepository>();
 builder.Services.AddScoped<ITurmaService, TurmaService>();
+
 builder.Services.AddScoped<IMatriculaRepository, MatriculaRepository>();
 builder.Services.AddScoped<IMatriculaService, MatriculaService>();
 
+builder.Services.AddScoped<IValidator<CreateAlunoDto>, CreateAlunoDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateAlunoDto>, UpdateAlunoDtoValidator>();
+builder.Services.AddScoped<IValidator<CreateTurmaDto>, CreateTurmaDtoValidation>();
+builder.Services.AddScoped<IValidator<UpdateTurmaDto>, UpdateTurmaDtoValidator>();
+builder.Services.AddScoped<IValidator<CreateMatriculaDto>, CreateMatriculaDtoValidator>();
+builder.Services.AddScoped<IValidator<MatriculaDto>, MatriculaDtoValidator>();
+builder.Services.AddScoped<IValidator<RegisterAdminDto>, RegisterAdminDtoValidator>();
+builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+
 
 builder.Services.AddFluentValidationAutoValidation();
+
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(c => {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "FiapAPIRestful", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

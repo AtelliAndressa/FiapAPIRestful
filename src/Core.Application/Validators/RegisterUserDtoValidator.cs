@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Core.Application.Validators;
 
-public class RegisterUserDtoValidator : AbstractValidator<RegisterAdminDto>
+public class RegisterUserDtoValidator : AbstractValidator<RegisterUserDto>
 {
     public RegisterUserDtoValidator()
     {
