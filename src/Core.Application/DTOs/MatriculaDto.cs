@@ -1,9 +1,22 @@
-﻿namespace Core.Application.DTOs;
+﻿namespace Core.Application.DTOs
+{
+    public class MatriculaDto
+    {
+        public MatriculaDto()
+        {
+        }
 
-public record MatriculaDto(int Id, AlunoDto Aluno, TurmaDto Turma, DateTime DataMatricula);
+        public MatriculaDto(int id, AlunoDto alunoDto, TurmaDto turmaDto, DateTime dataMatricula)
+        {
+            Id = id;
+            this.Aluno = alunoDto;
+            this.Turma = turmaDto;
+            DataMatricula = dataMatricula;
+        }
 
-
-public record CreateMatriculaDto(int AlunoId, int TurmaId, DateTime DataMatricula);
-
-
-
+        public int Id { get; set; }
+        public AlunoDto Aluno { get; set; } = new AlunoDto();
+        public TurmaDto Turma { get; set; } = new TurmaDto();
+        public DateTime DataMatricula { get; set; }
+    }
+}

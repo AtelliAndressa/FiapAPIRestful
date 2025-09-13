@@ -12,7 +12,7 @@ namespace Core.Application.Validators.Common;
                 return false;
             }
 
-        return Regex.IsMatch(name, @"^[A-Za-zÀ-ú\s]+$");
+            return Regex.IsMatch(name, @"^[A-Za-zÀ-ú\s]+$");
         }
         public static bool IsValidCpf(string cpf)
         {

@@ -15,6 +15,6 @@ namespace Core.Domain.Interfaces
 
         Task DeleteAsync(int id);
 
-        Task<Aluno> GetByCpfAsync(string cpf)
+        Task<Aluno> GetByCpfAsync(string cpf);
     }
 }

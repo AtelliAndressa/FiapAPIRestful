@@ -1,3 +1,20 @@
-﻿namespace Core.Application.DTOs;
+﻿namespace Core.Application.DTOs
+{
+    public class ChangePasswordDto
+    {
+        public ChangePasswordDto()
+        { 
+        }
 
-public record ChangePasswordDto(string CurrentPassword, string NewPassword, string ConfirmNewPassword);
+        public ChangePasswordDto(string currentPassword, string newPassword, string confirmNewPassword)
+        {
+            CurrentPassword = currentPassword;
+            NewPassword = newPassword;
+            ConfirmNewPassword = confirmNewPassword;
+        }
+
+        public string CurrentPassword { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
+        public string ConfirmNewPassword { get; set; } = string.Empty;
+    }
+}

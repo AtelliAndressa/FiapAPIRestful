@@ -1,3 +1,22 @@
-﻿namespace Core.Application.DTOs;
+﻿namespace Core.Application.DTOs
+{
+    public class RegisterUserDto
+    {
+        public RegisterUserDto()
+        {
+        }
 
-public record RegisterUserDto(string Email, string Password, string ConfirmPassword);
+        public RegisterUserDto(string email, string password, string confirmPassword)
+        {
+            Email = email;
+            Password = password;
+            ConfirmPassword = confirmPassword;
+        }
+
+        public string Email { get; set; } = string.Empty;
+
+        public string Password { get; set; } = string.Empty;
+
+        public string ConfirmPassword { get; set; } = string.Empty;
+    }
+}

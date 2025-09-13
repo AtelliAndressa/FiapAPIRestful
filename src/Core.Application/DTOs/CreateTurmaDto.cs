@@ -1,17 +1,17 @@
 ﻿namespace Core.Application.DTOs
 {
-    public class TurmaDto
+    public class CreateTurmaDto
     {
-        public TurmaDto() { }
-
-        public TurmaDto(int id, string nome, string descricao)
+        public CreateTurmaDto()
         {
-            Id = id;
+        }
+
+        public CreateTurmaDto(string nome, string descricao)
+        {
             Nome = nome;
             Descricao = descricao;
         }
 
-        public int Id { get; set; }
         public string Nome { get; set; } = string.Empty;
         public string Descricao { get; set; } = string.Empty;
     }

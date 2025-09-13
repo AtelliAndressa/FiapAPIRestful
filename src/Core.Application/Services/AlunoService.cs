@@ -3,21 +3,35 @@ using Core.Application.Interfaces;
 using Core.Domain.Common;
 using Core.Domain.Entities;
 using Core.Domain.Interfaces;
-using System.ComponentModel.DataAnnotations;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace Core.Application.Services
 {
     public class AlunoService : IAlunoService
     {
         private readonly IAlunoRepository _alunoRepository;
+        private readonly IValidator<CreateAlunoDto> _createValidator;
+        private readonly IValidator<AlunoDto> _validator;
 
-        public AlunoService(IAlunoRepository alunoRepository)
+        public AlunoService(IAlunoRepository alunoRepository,  
+            IValidator<CreateAlunoDto> createValidator,
+            IValidator<AlunoDto> validator)
         {
             _alunoRepository = alunoRepository;
+            _createValidator = createValidator;
+            _validator = validator;
         }
 
         public async Task AddAsync(CreateAlunoDto alunoDto)
         {
+            ValidationResult validationResult = await _createValidator.ValidateAsync(alunoDto);
+
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
             Aluno alunoExists = await _alunoRepository.GetByCpfAsync(alunoDto.Cpf);
 
             if (alunoExists != null)
@@ -42,7 +56,7 @@ namespace Core.Application.Services
 
             if (aluno == null)
             {
-                return null;
+                throw new ValidationException("Aluno não encontrado.");
             }
 
             return new AlunoDto(aluno.Id, aluno.Nome, aluno.Email, aluno.Cpf, aluno.DataNascimento);
@@ -50,6 +64,13 @@ namespace Core.Application.Services
 
         public async Task UpdateAsync(AlunoDto alunoDto)
         {
+            ValidationResult validationResult = await _validator.ValidateAsync(alunoDto);
+
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
             Aluno aluno = await _alunoRepository.GetByIdAsync(alunoDto.Id);
 
             if (aluno != null)
