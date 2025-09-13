@@ -92,7 +92,7 @@ namespace Core.Application.Services
                 throw new ValidationException("Turma não encontrada.");
             }
 
-            return new TurmaDto(turma.Id, turma.Nome, turma.Descricao);
+            return new TurmaDto(turma.Id, turma.Nome, turma.Descricao, 0);
         }
 
         public async Task UpdateAsync(TurmaDto turmaDto)

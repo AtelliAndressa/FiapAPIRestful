@@ -97,9 +97,9 @@ public class AlunosController : ControllerBase
     /// <returns></returns>
     [HttpPut("{id}")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> Put([FromBody] AlunoDto alunoDto)
+    public async Task<IActionResult> Put(int id, [FromBody] UpdateAlunoDto alunoDto)
     {
-        await _alunoService.UpdateAsync(alunoDto);
+        await _alunoService.UpdateAsync(id, alunoDto);
 
         return NoContent();
     }

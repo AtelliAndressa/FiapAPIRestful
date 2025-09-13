@@ -12,11 +12,11 @@ namespace Core.Application.Services
     {
         private readonly IAlunoRepository _alunoRepository;
         private readonly IValidator<CreateAlunoDto> _createValidator;
-        private readonly IValidator<AlunoDto> _validator;
+        private readonly IValidator<UpdateAlunoDto> _validator;
 
         public AlunoService(IAlunoRepository alunoRepository,  
             IValidator<CreateAlunoDto> createValidator,
-            IValidator<AlunoDto> validator)
+            IValidator<UpdateAlunoDto> validator)
         {
             _alunoRepository = alunoRepository;
             _createValidator = createValidator;
@@ -62,7 +62,7 @@ namespace Core.Application.Services
             return new AlunoDto(aluno.Id, aluno.Nome, aluno.Email, aluno.Cpf, aluno.DataNascimento);
         }
 
-        public async Task UpdateAsync(AlunoDto alunoDto)
+        public async Task UpdateAsync(int id, UpdateAlunoDto alunoDto)
         {
             ValidationResult validationResult = await _validator.ValidateAsync(alunoDto);
 
@@ -71,17 +71,18 @@ namespace Core.Application.Services
                 throw new ValidationException(validationResult.Errors);
             }
 
-            Aluno aluno = await _alunoRepository.GetByIdAsync(alunoDto.Id);
+            Aluno aluno = await _alunoRepository.GetByIdAsync(id);
 
-            if (aluno != null)
+            if (aluno == null)
             {
-                aluno.Nome = alunoDto.Nome;
-                aluno.Email = alunoDto.Email;
-                aluno.Cpf = alunoDto.Cpf;
-                aluno.DataNascimento = alunoDto.DataNascimento;
-
-                await _alunoRepository.UpdateAsync(aluno);
+                throw new ValidationException("Aluno não encontrado.");
             }
+
+            aluno.Nome = alunoDto.Nome;
+            aluno.Email = alunoDto.Email;
+            aluno.DataNascimento = alunoDto.DataNascimento;
+
+            await _alunoRepository.UpdateAsync(aluno);
         }
 
         public async Task<bool> DeleteAsync(int id)

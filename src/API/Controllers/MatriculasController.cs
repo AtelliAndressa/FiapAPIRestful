@@ -40,7 +40,7 @@ public class MatriculasController : ControllerBase
     [Authorize(Policy = "AdminOrUser")]
     public async Task<IActionResult> GetByAlunoId(int alunoId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
-        PagedResult<MatriculaDto> matriculas = await _matriculaService.GetByStudenIdAsync(alunoId, pageNumber, pageSize);
+        PagedResult<MatriculaDto> matriculas = await _matriculaService.GetByStudentIdAsync(alunoId, pageNumber, pageSize);
 
         if (matriculas == null || !matriculas.Items.Any())
         {
@@ -59,7 +59,7 @@ public class MatriculasController : ControllerBase
     [Authorize(Policy = "AdminOrUser")]
     public async Task<IActionResult> GetByTeamId(int turmaId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
-        PagedResult<MatriculaDto> matriculas = await _matriculaService.GetByStudenIdAsync(turmaId, pageNumber, pageSize);
+        PagedResult<MatriculaDto> matriculas = await _matriculaService.GetByTeamIdAsync(turmaId, pageNumber, pageSize);
 
         if (matriculas == null || !matriculas.Items.Any())
         {

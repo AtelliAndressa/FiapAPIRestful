@@ -77,7 +77,7 @@ namespace Core.Application.Services
             return new MatriculaDto(
                 novaMatricula.Id,
                 new AlunoDto(aluno.Id, aluno.Nome, aluno.Cpf, aluno.Email, aluno.DataNascimento),
-                new TurmaDto(turma.Id, turma.Nome, turma.Descricao),
+                new TurmaDto(turma.Id, turma.Nome, turma.Descricao, 0),
                 novaMatricula.DataMatricula
             );
         }
@@ -131,7 +131,7 @@ namespace Core.Application.Services
             return new MatriculaDto(
                 matricula.Id,
                 new AlunoDto(matricula.Aluno.Id, matricula.Aluno.Nome, matricula.Aluno.Cpf, matricula.Aluno.Email, matricula.Aluno.DataNascimento),
-                new TurmaDto(matricula.Turma.Id, matricula.Turma.Nome, matricula.Turma.Descricao),
+                new TurmaDto(matricula.Turma.Id, matricula.Turma.Nome, matricula.Turma.Descricao, 0),
                 matricula.DataMatricula
             );
         }
@@ -141,7 +141,7 @@ namespace Core.Application.Services
             return matriculas.Select(m => new MatriculaDto(
                 m.Id,
                 new AlunoDto(m.Aluno.Id, m.Aluno.Nome, m.Aluno.Cpf, m.Aluno.Email, m.Aluno.DataNascimento),
-                new TurmaDto(m.Turma.Id, m.Turma.Nome, m.Turma.Descricao),
+                new TurmaDto(m.Turma.Id, m.Turma.Nome, m.Turma.Descricao, 0),
                 m.DataMatricula
             )).ToList();
         }

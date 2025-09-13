@@ -17,6 +17,11 @@ namespace Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Aluno>(entity =>
+            {
+                entity.HasIndex(e => e.Cpf).IsUnique();
+            });
         }
     }
 }

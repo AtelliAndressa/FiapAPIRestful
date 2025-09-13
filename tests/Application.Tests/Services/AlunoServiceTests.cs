@@ -14,14 +14,14 @@ namespace Application.Tests.Services
     {
         private readonly Mock<IAlunoRepository> _alunoRepoMock;
         private readonly Mock<IValidator<CreateAlunoDto>> _createValidatorMock;
-        private readonly Mock<IValidator<AlunoDto>> _validatorMock;
+        private readonly Mock<IValidator<UpdateAlunoDto>> _validatorMock;
         private readonly AlunoService _alunoService;
 
         public AlunoServiceTests()
         {
             _alunoRepoMock = new Mock<IAlunoRepository>();
             _createValidatorMock = new Mock<IValidator<CreateAlunoDto>>();
-            _validatorMock = new Mock<IValidator<AlunoDto>>();
+            _validatorMock = new Mock<IValidator<UpdateAlunoDto>>();
 
             _alunoService = new AlunoService(
                 _alunoRepoMock.Object,

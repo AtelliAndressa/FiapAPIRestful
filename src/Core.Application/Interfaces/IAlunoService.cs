@@ -13,7 +13,7 @@ namespace Core.Application.Interfaces
 
         Task AddAsync(CreateAlunoDto alunoDto);
 
-        Task UpdateAsync(AlunoDto alunoDto);
+        Task UpdateAsync(int id, UpdateAlunoDto alunoDto);
 
         Task<bool> DeleteAsync(int id);
     }
