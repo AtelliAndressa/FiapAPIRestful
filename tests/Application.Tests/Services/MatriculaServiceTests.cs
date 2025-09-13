@@ -1,10 +1,11 @@
 ﻿using Core.Application.DTOs;
 using Core.Application.Services;
+using Core.Domain.Common;
 using Core.Domain.Entities;
 using Core.Domain.Interfaces;
-using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Moq;
-using System.ComponentModel.DataAnnotations;
 
 namespace Application.Tests.Services
 {
@@ -13,95 +14,202 @@ namespace Application.Tests.Services
         private readonly Mock<IMatriculaRepository> _matriculaRepoMock;
         private readonly Mock<IAlunoRepository> _alunoRepoMock;
         private readonly Mock<ITurmaRepository> _turmaRepoMock;
-        private readonly MatriculaService _service; // O Serviço REAL que estamos testando
+        private readonly Mock<IValidator<CreateMatriculaDto>> _createValidatorMock;
+        private readonly Mock<IValidator<MatriculaDto>> _validatorMock;
 
-        // Construtor: Este código roda antes de CADA teste
+        private readonly MatriculaService _matriculaService;
+
         public MatriculaServiceTests()
         {
-            // Arrange (Configuração inicial para todos os testes)
             _matriculaRepoMock = new Mock<IMatriculaRepository>();
             _alunoRepoMock = new Mock<IAlunoRepository>();
             _turmaRepoMock = new Mock<ITurmaRepository>();
+            _createValidatorMock = new Mock<IValidator<CreateMatriculaDto>>();
+            _validatorMock = new Mock<IValidator<MatriculaDto>>();
 
-            // Instanciamos o serviço real, injetando os Mocks (dublês)
-            _service = new MatriculaService(
+            _matriculaService = new MatriculaService(
                 _matriculaRepoMock.Object,
                 _alunoRepoMock.Object,
-                _turmaRepoMock.Object
+                _turmaRepoMock.Object,
+                _createValidatorMock.Object,
+                _validatorMock.Object
             );
         }
 
+        /// <summary>
+        /// Simula um cenário onde o DTO é válido, o aluno existe, a turma existe e a matrícula é nova, 
+        /// verificando se o serviço retorna o DTO "rico" e chama o método de salvar no repositório.
+        /// </summary>
+        /// <returns></returns>
         [Fact]
-        public async Task CreateAsync_WithValidData_ShouldSucceedAndReturnRichDto()
+        public async Task AddAsync_WithValidData_ShouldSucceedAndReturnRichDto()
         {
-            int pageNumber = 1;
-            int pageSize = 10;
-            // 1. Criar dados de entrada falsos
-            var createDto = new CreateMatriculaDto(1, 1, DateTime.Now); // Assumindo o DTO que definimos
-            var fakeAluno = new Aluno { Id = 1, Nome = "Aluno Teste", Cpf = "12345678901", DataNascimento = DateTime.Now };
+            var createDto = new CreateMatriculaDto(1, 1, DateTime.Now);
+
+            var fakeAluno = new Aluno
+            {
+                Id = 1,
+                Nome = "Aluno Teste",
+                Cpf = "22580591866",
+                Email = "testeAluno@gmail.com",
+                DataNascimento = new DateTime(1983, 12, 14)
+            };
+
             var fakeTurma = new Turma { Id = 1, Nome = "Turma Teste", Descricao = "Desc" };
 
-            // 2. Programar os Mocks: "Dizer" aos repositórios falsos o que retornar
+            _createValidatorMock.Setup(v => v.ValidateAsync(createDto, It.IsAny<CancellationToken>()))
+                                .ReturnsAsync(new ValidationResult());
 
-            // "Quando o serviço perguntar pelo aluno com Id 1, retorne o aluno falso"
-            _alunoRepoMock.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(fakeAluno);
+            _alunoRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(fakeAluno);
 
-            // "Quando o serviço perguntar pela turma com Id 1, retorne a turma falsa"
-            _turmaRepoMock.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(fakeTurma);
+            _turmaRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(fakeTurma);
 
-            // "Quando o serviço perguntar se o aluno já está matriculado (RF05), retorne 'false'"
-            _matriculaRepoMock.Setup(repo => repo.IsStudentAlreadyEnrolledAsync(1, 1)).ReturnsAsync(false);
+            _matriculaRepoMock.Setup(r => r.IsStudentAlreadyEnrolledAsync(1, 1)).ReturnsAsync(false);
 
-            // --- ACT ---
+            var result = await _matriculaService.AddAsync(createDto);
 
-            // 3. Executar o método
-            var result = await _service.CreateAsync(createDto);
+            Assert.NotNull(result);
+            Assert.IsType<MatriculaDto>(result);
+            Assert.Equal("Aluno Teste", result.Aluno.Nome);
+            Assert.Equal("Turma Teste", result.Turma.Nome);
 
-            // --- ASSERT ---
-
-            // 4. Verificar os resultados com FluentAssertions
-            result.Should().NotBeNull();
-            result.Should().BeOfType<MatriculaDto>();
-            result.Aluno.Id.Should().Be(1);
-            result.Aluno.Nome.Should().Be("Aluno Teste");
-            result.Turma.Nome.Should().Be("Turma Teste");
-
-            // 5. Verificar se o método AddAsync do repositório foi chamado EXATAMENTE UMA VEZ
-            _matriculaRepoMock.Verify(repo => repo.AddAsync(It.IsAny<Matricula>()), Times.Once);
+            _matriculaRepoMock.Verify(r => r.AddAsync(It.IsAny<Matricula>()), Times.Once);
         }
 
+        /// <summary>
+        /// Simula que o aluno já está matriculado (o mock IsStudentAlreadyEnrolledAsync retorna true) e verifica se o 
+        /// serviço lança a ValidationException correta, impedindo a matrícula duplicada.
+        /// </summary>
+        /// <returns></returns>
         [Fact]
-        public async Task CreateAsync_WhenStudentIsAlreadyEnrolled_ShouldThrowValidationException()
+        public async Task AddAsync_WhenStudentAlreadyEnrolled_ShouldThrowValidationException()
         {
-            [cite_start]// Este teste valida especificamente o Requisito RF05 
+            var createDto = new CreateMatriculaDto(1, 1, new DateTime(2025, 1, 10));
 
-            // --- ARRANGE ---
-            var createDto = new CreateMatriculaDto(1, 1, DateTime.Now);
-            var fakeAluno = new Aluno { Id = 1 };
-            var fakeTurma = new Turma { Id = 1 };
+            var fakeAluno = new Aluno
+            {
+                Id = 1,
+                Nome = "Aluno Teste Real",
+                Cpf = "12345678901",
+                Email = "aluno@teste.com",
+                DataNascimento = new DateTime(2000, 10, 14)
+            };
 
-            // Configuração dos mocks para "passar" pelas primeiras validações
-            _alunoRepoMock.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(fakeAluno);
-            _turmaRepoMock.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(fakeTurma);
+            var fakeTurma = new Turma { Id = 1, Nome = "Turma Teste Real", Descricao = "Desc Real" };
 
-            // AQUI ESTÁ O PONTO-CHAVE DO TESTE:
-            // "Quando o serviço perguntar se o aluno já está matriculado, retorne 'true'"
-            _matriculaRepoMock.Setup(repo => repo.IsStudentAlreadyEnrolledAsync(1, 1)).ReturnsAsync(true);
+            _createValidatorMock.Setup(v => v.ValidateAsync(createDto, It.IsAny<CancellationToken>()))
+                                .ReturnsAsync(new ValidationResult());
 
-            // --- ACT ---
+            _alunoRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(fakeAluno);
 
-            // Para testar exceções, precisamos encapsular a chamada do método em uma Action ou Func
-            Func<Task> act = async () => await _service.CreateAsync(createDto);
+            _turmaRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(fakeTurma);
 
-            // --- ASSERT ---
+            _matriculaRepoMock.Setup(r => r.IsStudentAlreadyEnrolledAsync(1, 1)).ReturnsAsync(true);
 
-            // Verificamos se a ação (act) lança EXATAMENTE a exceção que esperamos
-            // E se a mensagem da exceção é a que definimos no serviço.
-            await act.Should().ThrowAsync<ValidationException>()
-                     .WithMessage("O aluno já está matriculado nesta turma.");
+            Func<Task> act = async () => await _matriculaService.AddAsync(createDto);
 
-            // Também garantimos que o método AddAsync NUNCA foi chamado
-            _matriculaRepoMock.Verify(repo => repo.AddAsync(It.IsAny<Matricula>()), Times.Never);
+            var exception = await Assert.ThrowsAsync<ValidationException>(act);
+
+            Assert.Equal("O aluno já está matriculado nesta turma.", exception.Message);
+
+            _matriculaRepoMock.Verify(r => r.AddAsync(It.IsAny<Matricula>()), Times.Never);
+        }
+
+        /// <summary>
+        /// Simula o IAlunoRepository retornando null e verifica se o serviço lança a ValidationException correta 
+        /// informando que o aluno não foi encontrado.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task AddAsync_WhenAlunoNotFound_ShouldThrowValidationException()
+        {
+            var createDto = new CreateMatriculaDto(99, 1, DateTime.Now);
+
+            _createValidatorMock.Setup(v => v.ValidateAsync(createDto, It.IsAny<CancellationToken>()))
+                                .ReturnsAsync(new ValidationResult());
+
+            _alunoRepoMock.Setup(r => r.GetByIdAsync(99)).ReturnsAsync((Aluno)null);
+
+            Func<Task> act = async () => await _matriculaService.AddAsync(createDto);
+
+            var exception = await Assert.ThrowsAsync<ValidationException>(act);
+
+            Assert.Equal("Aluno não encontrado. Por favor cadastre o Aluno antes de efetuar a matrícula.", exception.Message);
+
+            _matriculaRepoMock.Verify(r => r.AddAsync(It.IsAny<Matricula>()), Times.Never);
+        }
+
+        /// <summary>
+        /// Simula que o aluno foi encontrado, mas a ITurmaRepository retorna null, e verifica se o 
+        /// serviço lança a ValidationException correta informando que a turma não foi encontrada.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task AddAsync_WhenTurmaNotFound_ShouldThrowValidationException()
+        {
+            var createDto = new CreateMatriculaDto(1, 99, DateTime.Now);
+
+            var fakeAluno = new Aluno
+            {
+                Id = 1,
+                Nome = "Aluno Teste Real",
+                Cpf = "12345678901",
+                Email = "aluno@teste.com",
+                DataNascimento = new DateTime(2000, 1, 1)
+            };
+
+            _createValidatorMock.Setup(v => v.ValidateAsync(createDto, It.IsAny<CancellationToken>()))
+                                .ReturnsAsync(new ValidationResult());
+
+            _alunoRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(fakeAluno);
+
+            _turmaRepoMock.Setup(r => r.GetByIdAsync(99)).ReturnsAsync((Turma)null);
+
+            Func<Task> act = async () => await _matriculaService.AddAsync(createDto);
+
+            var exception = await Assert.ThrowsAsync<ValidationException>(act);
+
+            Assert.Equal("Turma não encontrada. Por favor cadastre a turma antes de efetuar a matrícula.", exception.Message);
+
+            _matriculaRepoMock.Verify(r => r.AddAsync(It.IsAny<Matricula>()), Times.Never);
+        }
+
+        /// <summary>
+        /// Simula o repositório retornando um PagedResult<Matricula> (entidades com Aluno/Turma) e verifica se o 
+        /// serviço mapeia corretamente para um PagedResult<MatriculaDto> (DTOs), preservando os dados da paginação.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnPaginatedRichDtos()
+        {
+            var fakeAluno = new Aluno
+            {
+                Id = 1,
+                Nome = "Aluno Teste Real",
+                Cpf = "12345678901",
+                Email = "aluno@teste.com",
+                DataNascimento = new DateTime(2001, 12, 1)
+            };
+
+            var fakeTurma = new Turma { Id = 1, Nome = "Turma Teste Real", Descricao = "Desc Real" };
+
+            var fakeMatriculaList = new List<Matricula>
+            {
+                new Matricula { Id = 1, Aluno = fakeAluno, Turma = fakeTurma, DataMatricula = DateTime.Now }
+            };
+
+            var fakeRepoResult = new PagedResult<Matricula>(fakeMatriculaList, 1, 1, 10);
+
+            _matriculaRepoMock.Setup(r => r.GetAllAsync(1, 10)).ReturnsAsync(fakeRepoResult);
+
+            var result = await _matriculaService.GetAllAsync(1, 10);
+
+            Assert.NotNull(result);
+            Assert.Equal(1, result.TotalCount);
+
+            var item = Assert.Single(result.Items);
+
+            Assert.Equal("Aluno Teste", item.Aluno.Nome);
         }
     }
 }
