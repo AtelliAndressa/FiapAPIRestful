@@ -67,7 +67,12 @@ namespace Core.Application.Services
             PagedResult<Turma> pagedResultEntity = await _turmaRepository.GetAllAsync(pageNumber, pageSize);
 
             List<TurmaDto> itemsDto = pagedResultEntity.Items
-                .Select(t => new TurmaDto(t.Id, t.Nome, t.Descricao))
+                .Select(t => new TurmaDto(
+                    t.Id,
+                    t.Nome,
+                    t.Descricao,
+                    t.Matriculas.Count()
+                ))
                 .ToList();
 
             return new PagedResult<TurmaDto>(

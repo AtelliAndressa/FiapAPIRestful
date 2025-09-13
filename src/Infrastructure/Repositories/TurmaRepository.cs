@@ -22,6 +22,7 @@ namespace Infrastructure.Repositories
 
             List<Turma> items = await _context.Turmas
                 .OrderBy(t => t.Nome)
+                .Include(t => t.Matriculas)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .AsNoTracking()
