@@ -7,31 +7,25 @@ Esta é uma API RESTful desenvolvida em .NET 8 como solução para o Desafio .NE
 Este projeto atende a todos os requisitos funcionais (RF) e não funcionais (RNF) solicitados:
 - CRUD completo para Alunos e Turmas.
 - Sistema de Matrícula com validação de duplicidade (RF05) e visualização de alunos por turma.
-- Autenticação JWT com Política de Acesso exclusiva para Administradores (atendendo 100% ao RF10).
+- Autenticação JWT com Política de Acesso **exclusiva para Administradores** (atendendo 100% ao RF10).
 - Listagens paginadas (10 por padrão) e ordenadas alfabeticamente (RF01).
 - Contagem de alunos por turma na listagem (RF02).
 - Busca de alunos por nome (RF09).
 - Validações robustas (RF03, RF04, RF06, RF07), incluindo CPF/Email únicos, senhas fortes e regras de negócio.
 - Senhas armazenadas com hash seguro (RF08).
 - Documentação Swagger (RNF03)  e uso correto de verbos HTTP (RNF01).
+- Modelagem de banco com chaves (GUID) e restrições de índice único (RNF02).
 
 ## Tecnologias Utilizadas
 
-Framework: .NET 8
-
-Arquitetura: Abordagem baseada em DDD (Domain, Application, Infrastructure, API)
-
-Persistência: Entity Framework Core 8
-
-Banco de Dados: SQL Server
-
-Autenticação: ASP.NET Core Identity + JWT Bearer
-
-Validação: FluentValidation
-
-Testes: xUnit, Moq, FluentAssertions (BN01)
-
-Padrões: Repository Pattern, Service Pattern, Injeção de Dependência, SRP
+- **Framework**: .NET 8 (atendendo ao requisito .NET Core >= 6) 
+- **Arquitetura**: Abordagem baseada em DDD (Domain-Driven Design)
+- **Persistência**: Entity Framework Core 8
+- **Banco de Dados**: SQL Server
+- **Autenticação**: ASP.NET Core Identity + JWT Bearer
+- **Validação**: FluentValidation
+- **Testes (Bônus BN01)**: xUnit, Moq, FluentAssertions 
+- **Padrões**: Repository Pattern, Service Pattern, Injeção de Dependência, Clean Code.
 
 ---
 
@@ -42,25 +36,26 @@ Siga os passos abaixo para executar a aplicação localmente.
 ### 1. Pré-requisitos
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- Um servidor SQL Server (Express, Developer ou LocalDB) acessível. O LocalDB é o padrão.
+- SQL Server LocalDB (geralmente instalado com o Visual Studio 2022).
 
 ### 2. Configuração da Conexão
 
 1.  Clone este repositório.
 2.  Abra o arquivo `src/API/appsettings.json`.
-3.  Garanta que a seção `ConnectionStrings` está configurada para seu banco. O código enviado utiliza a seguinte configuração para o LocalDB (usuário `sa`, senha `14112008`):
+3.  Garanta que a seção `ConnectionStrings` esteja configurada para usar a Autenticação do Windows (Trusted_Connection), que funcionará em qualquer máquina com LocalDB:
 
     ```json
     "ConnectionStrings": {
-      "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=FiapApiRestifulDB;User ID=sa;Password=14112008;Encrypt=False;TrustServerCertificate=True;MultipleActiveResultSets=True"
+      "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=FiapApiRestifulDB;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True;MultipleActiveResultSets=True"
     },
     ```
 
-4.  Na mesma seção, configure o `Jwt`. O `"Key"` deve ser preenchido com a chave secreta configurada no seu User Secrets (conforme fizemos durante o desenvolvimento).
+4.  Na mesma seção, configure o `Jwt`. O `"Key"` deve ser preenchido com uma chave secreta segura (para um teste real, a chave deve ser fornecida via User Secrets ou Variáveis de Ambiente, mas para este desafio, informe uma chave longa aqui ou no User Secrets).
+5.  obs: Minha chave foi inserida no User Secrets.
 
     ```json
     "Jwt": {
-      "Key": "Chave está no segredos do usuario na API",
+      "Key": "SUA_CHAVE_SECRETA_MUITO_LONGA_E_SEGURA_DEVE_VIR_AQUI",
       "Issuer": "https://localhost:7096",
       "Audience": "https://localhost:7096"
     },
@@ -74,43 +69,3 @@ Abra um terminal na pasta raiz do projeto (onde está o `.sln`) e execute:
 
 ```bash
 dotnet ef database update --startup-project src/API
-
-
-### 4. Executando a Aplicação
-
-Após a criação do banco, rode a API:
-
-```bash
-dotnet run --project src/API
-
-A aplicação será iniciada e o terminal mostrará os endereços de escuta, incluindo https://localhost:7096.
-
-Usuário Administrador Inicial:
-Na primeira vez que a aplicação rodar, ela executará o SeedData automaticamente, criando a role "Admin" e o usuário administrador padrão:
-
-Usuário: admin@exemplo.com
-
-Senha: Admin@123
-
-### 5. Documentação (Swagger)
-
-A API é iniciada automaticamente com o Swagger. Acesse a URL principal da aplicação (definida no 
-
-launchSettings.json) para ver a documentação completa da API e testar os endpoints:
-
-https://localhost:7096/swagger
-
-Para testar endpoints protegidos:
-
-Use o endpoint POST /api/auth/login com o usuário admin.
-
-Copie o token JWT da resposta.
-
-Clique no botão "Authorize" no topo do Swagger e cole o token no formato Bearer SEU_TOKEN_AQUI.
-
-Testando a Aplicação
-Para rodar a suíte completa de testes unitários (BN01), execute o seguinte comando na pasta raiz do projeto:
-
-```bash
-
-dotnet test
