@@ -1,6 +1,6 @@
 # Desafio API RESTful - Secretaria FIAP
 
-Esta é uma API RESTful desenvolvida em .NET 8 como solução para o Desafio .NET da FIAP. A API gerencia alunos, turmas e matrículas, implementando autenticação JWT e seguindo padrões de arquitetura DDD e Clean Code.
+Esta é uma API RESTful desenvolvida em .NET 9 como solução para o Desafio .NET da FIAP. A API gerencia alunos, turmas e matrículas, implementando autenticação JWT e seguindo padrões de arquitetura DDD e Clean Code.
 
 ## Requisitos Atendidos
 
