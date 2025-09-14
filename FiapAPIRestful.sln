@@ -20,6 +20,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		dump.sql = dump.sql
 	EndProjectSection
 EndProject
 Global
@@ -102,5 +103,8 @@ Global
 		{AE090F36-A391-4C8F-8676-B3F1DA3EF5B5} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{17AE746F-BD5D-4E33-8E06-87E33B827812} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{30D9A02D-602B-4AAA-AA30-A3C130F476A8} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1B4B2B20-1B54-45E1-A89E-37C10D66FE9E}
 	EndGlobalSection
 EndGlobal

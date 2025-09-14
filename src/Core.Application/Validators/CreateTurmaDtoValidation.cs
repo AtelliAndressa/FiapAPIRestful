@@ -8,7 +8,7 @@ public class CreateTurmaDtoValidation : AbstractValidator<CreateTurmaDto>
     public CreateTurmaDtoValidation()
     {
         RuleFor(x => x.Nome)
-            .NotEmpty().WithMessage("O nome do Turma é obrigatório.")
+            .NotEmpty().WithMessage("O nome do Turma é obrigatório e não pode ser nula.")
             .Length(3, 100).WithMessage("O nome do Turma deve ter entre 3 e 100 caracteres.");
 
         RuleFor(x => x.Descricao)

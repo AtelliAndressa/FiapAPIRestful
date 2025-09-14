@@ -2,10 +2,6 @@
 {
     public class AlunoDto
     {
-        public AlunoDto()
-        { 
-        }
-
         public AlunoDto(Guid id, string nome, string cpf, string email, DateTime dataNascimento)
         {
             Id = id;
@@ -17,11 +13,11 @@
 
         public Guid Id { get; set; }
 
-        public string Nome { get; set; } = string.Empty;
+        public string Nome { get; set; }
 
-        public string Cpf { get; set; } = string.Empty;
+        public string Cpf { get; set; }
 
-        public string Email { get; set; } = string.Empty;
+        public string Email { get; set; }
 
         public DateTime DataNascimento { get; set; }
     }

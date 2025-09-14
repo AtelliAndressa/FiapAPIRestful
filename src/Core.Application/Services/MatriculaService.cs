@@ -13,32 +13,19 @@ namespace Core.Application.Services
         private readonly IMatriculaRepository _matriculaRepository;
         private readonly IAlunoRepository _alunoRepository;
         private readonly ITurmaRepository _turmaRepository;
-        private readonly IValidator<CreateMatriculaDto> _createValidator;
-        private readonly IValidator<MatriculaDto> _validator;
 
         public MatriculaService(
             IMatriculaRepository matriculaRepository,
             IAlunoRepository alunoRepository,
-            ITurmaRepository turmaRepository,
-            IValidator<CreateMatriculaDto> createValidator,
-            IValidator<MatriculaDto> validator)
+            ITurmaRepository turmaRepository)
         {
             _matriculaRepository = matriculaRepository;
             _alunoRepository = alunoRepository;
             _turmaRepository = turmaRepository;
-            _createValidator = createValidator;
-            _validator = validator;
         }
 
         public async Task<MatriculaDto> AddAsync(CreateMatriculaDto matriculaDto)
         {
-            ValidationResult validationResult = await _createValidator.ValidateAsync(matriculaDto);
-
-            if (!validationResult.IsValid)
-            {
-                throw new ValidationException(validationResult.Errors);
-            }
-
             Aluno aluno = await _alunoRepository.GetByIdAsync(matriculaDto.AlunoId);
 
             if (aluno == null)
@@ -84,13 +71,6 @@ namespace Core.Application.Services
 
         public async Task UpdateAsync(MatriculaDto matricula)
         {
-            ValidationResult validationResult = await _validator.ValidateAsync(matricula);
-
-            if (!validationResult.IsValid)
-            {
-                throw new ValidationException(validationResult.Errors);
-            }
-
             Matricula existingMatricula = await _matriculaRepository.GetByIdAsync(matricula.Id);
 
             if (existingMatricula == null)

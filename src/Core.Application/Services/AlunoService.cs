@@ -4,34 +4,20 @@ using Core.Domain.Common;
 using Core.Domain.Entities;
 using Core.Domain.Interfaces;
 using FluentValidation;
-using FluentValidation.Results;
 
 namespace Core.Application.Services
 {
     public class AlunoService : IAlunoService
     {
         private readonly IAlunoRepository _alunoRepository;
-        private readonly IValidator<CreateAlunoDto> _createValidator;
-        private readonly IValidator<UpdateAlunoDto> _validator;
 
-        public AlunoService(IAlunoRepository alunoRepository,  
-            IValidator<CreateAlunoDto> createValidator,
-            IValidator<UpdateAlunoDto> validator)
+        public AlunoService(IAlunoRepository alunoRepository)
         {
             _alunoRepository = alunoRepository;
-            _createValidator = createValidator;
-            _validator = validator;
         }
 
         public async Task AddAsync(CreateAlunoDto alunoDto)
         {
-            ValidationResult validationResult = await _createValidator.ValidateAsync(alunoDto);
-
-            if (!validationResult.IsValid)
-            {
-                throw new ValidationException(validationResult.Errors);
-            }
-
             Aluno alunoExists = await _alunoRepository.GetByCpfAsync(alunoDto.Cpf);
 
             if (alunoExists != null)
@@ -64,13 +50,6 @@ namespace Core.Application.Services
 
         public async Task UpdateAsync(Guid id, UpdateAlunoDto alunoDto)
         {
-            ValidationResult validationResult = await _validator.ValidateAsync(alunoDto);
-
-            if (!validationResult.IsValid)
-            {
-                throw new ValidationException(validationResult.Errors);
-            }
-
             Aluno aluno = await _alunoRepository.GetByIdAsync(id);
 
             if (aluno == null)

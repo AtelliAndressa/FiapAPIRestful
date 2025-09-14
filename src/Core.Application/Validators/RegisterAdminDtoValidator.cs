@@ -9,13 +9,13 @@ public class RegisterAdminDtoValidator : AbstractValidator<RegisterAdminDto>
     public RegisterAdminDtoValidator()
     {
         RuleFor(x => x.Email)
-            .NotEmpty().WithMessage("O email é obrigatório.")
+            .NotEmpty().WithMessage("O email é obrigatório e não pode ser nulo.")
             .Must(ValidatorsTool.IsValidEmail)
             .WithMessage("O email deve ser válido.");
 
 
         RuleFor(x => x.Password)
-            .NotEmpty().WithMessage("A senha é obrigatória.")
+            .NotEmpty().WithMessage("A senha é obrigatória e não pode ser nula.")
             .MinimumLength(8).WithMessage("A senha deve ter no mínimo 8 caracteres.")
             .Matches("[A-Z]").WithMessage("A senha deve conter pelo menos uma letra maiúscula.")
             .Matches("[a-z]").WithMessage("A senha deve conter pelo menos uma letra minúscula.")

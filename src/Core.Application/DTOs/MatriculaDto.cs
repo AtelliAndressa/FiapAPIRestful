@@ -2,10 +2,6 @@
 {
     public class MatriculaDto
     {
-        public MatriculaDto()
-        {
-        }
-
         public MatriculaDto(Guid id, AlunoDto alunoDto, TurmaDto turmaDto, DateTime dataMatricula)
         {
             Id = id;
@@ -16,9 +12,9 @@
 
         public Guid Id { get; set; }
 
-        public AlunoDto Aluno { get; set; } = new AlunoDto();
+        public AlunoDto Aluno { get; set; }
 
-        public TurmaDto Turma { get; set; } = new TurmaDto();
+        public TurmaDto Turma { get; set; }
 
         public DateTime DataMatricula { get; set; }
     }

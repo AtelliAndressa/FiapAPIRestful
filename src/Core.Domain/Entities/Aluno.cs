@@ -1,9 +1,9 @@
-﻿namespace Core.Domain.Entities
-{
-    public class Aluno
-    {
-        public Guid Id { get; set; }
+﻿using Core.Domain.Common;
 
+namespace Core.Domain.Entities
+{
+    public class Aluno : BaseEntity
+    {
         public required string Nome { get; set; }
 
         public required string Cpf { get; set; }

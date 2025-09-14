@@ -12,8 +12,8 @@
             Descricao = descricao;
         }
 
-        public string Nome { get; set; } = string.Empty;
+        public string Nome { get; set; }
 
-        public string Descricao { get; set; } = string.Empty;
+        public string Descricao { get; set; }
     }
 }

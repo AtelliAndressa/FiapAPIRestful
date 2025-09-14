@@ -11,27 +11,14 @@ namespace Core.Application.Services
     public class TurmaService : ITurmaService
     {
         private readonly ITurmaRepository _turmaRepository;
-        private readonly IValidator<CreateTurmaDto> _createValidator;
-        private readonly IValidator<UpdateTurmaDto> _validator;
 
-        public TurmaService(ITurmaRepository turmaRepository,
-            IValidator<CreateTurmaDto> createValidator,
-            IValidator<UpdateTurmaDto> validator)
+        public TurmaService(ITurmaRepository turmaRepository)
         {
             _turmaRepository = turmaRepository;
-            _createValidator = createValidator;
-            _validator = validator;
         }
 
         public async Task AddAsync(CreateTurmaDto turmaDto)
         {
-            ValidationResult validationResult = await _createValidator.ValidateAsync(turmaDto);
-
-            if (!validationResult.IsValid)
-            {
-                throw new ValidationException(validationResult.Errors);
-            }
-
             bool turmaExists = await _turmaRepository.IsTeamAsync(turmaDto.Nome);
 
             if (turmaExists)
@@ -97,13 +84,6 @@ namespace Core.Application.Services
 
         public async Task UpdateAsync(Guid id, UpdateTurmaDto turmaDto)
         {
-            ValidationResult validationResult = await _validator.ValidateAsync(turmaDto);
-
-            if (!validationResult.IsValid)
-            {
-                throw new ValidationException(validationResult.Errors);
-            }
-
             Turma turma = await _turmaRepository.GetByIdAsync(id);
 
             if (turma == null)

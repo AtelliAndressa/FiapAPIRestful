@@ -69,9 +69,16 @@ namespace Core.Application.Validators.Common;
                 return false;
             }
 
-            MailAddress addr = new MailAddress(email);
+            try
+            {
+                var mailAddress = new MailAddress(email);
 
-            return addr.Address == email;
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
         }
 
         public static bool IsValidBirthDate(DateTime date)

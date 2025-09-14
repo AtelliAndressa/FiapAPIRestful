@@ -11,6 +11,8 @@ namespace Infrastructure.Repositories
     {
         private readonly ApplicationDbContext _context;
 
+        private IQueryable<Aluno> Alunos => _context.Alunos.OrderBy(a => a.Nome);
+
         public AlunoRepository(ApplicationDbContext context)
         {
             _context = context;
@@ -25,7 +27,6 @@ namespace Infrastructure.Repositories
         public async Task<Aluno> GetByCpfAsync(string cpf)
         {
             return await _context.Alunos
-                .AsNoTracking()
                 .FirstOrDefaultAsync(a => a.Cpf == cpf);
         }
 
@@ -59,10 +60,9 @@ namespace Infrastructure.Repositories
 
         public async Task<PagedResult<Aluno>> GetAllAsync(int pageNumber, int pageSize)
         {
-            int totalCount = await _context.Alunos.CountAsync();
+            int totalCount = await Alunos.CountAsync();
 
-            List<Aluno> items = await _context.Alunos
-                .OrderBy(a => a.Nome)
+            List<Aluno> items = await Alunos
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .AsNoTracking()
@@ -73,13 +73,11 @@ namespace Infrastructure.Repositories
 
         public async Task<PagedResult<Aluno>> SearchByNameAsync(string nome, int pageNumber, int pageSize)
         {
-            IQueryable<Aluno> query = _context.Alunos
-                .Where(a => a.Nome.ToLower().Contains(nome.ToLower()));
+            IQueryable<Aluno> query = Alunos.Where(a => a.Nome.ToLower().Contains(nome.ToLower()));
 
             int totalCount = await query.CountAsync();
 
-            var items = await query
-                .OrderBy(a => a.Nome)
+            List<Aluno> items = await query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .AsNoTracking()
@@ -91,7 +89,6 @@ namespace Infrastructure.Repositories
         public async Task<Aluno> GetByIdAsync(Guid id)
         {
             Aluno aluno = await _context.Alunos
-                .AsNoTracking()
                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (aluno == null)

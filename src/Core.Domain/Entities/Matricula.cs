@@ -1,9 +1,9 @@
-﻿namespace Core.Domain.Entities
-{
-    public class Matricula
-    {
-        public Guid Id { get; set; }
+﻿using Core.Domain.Common;
 
+namespace Core.Domain.Entities
+{
+    public class Matricula : BaseEntity
+    {
         public Guid AlunoId { get; set; }
 
         public Guid TurmaId { get; set; }
