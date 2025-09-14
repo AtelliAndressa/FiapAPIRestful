@@ -31,7 +31,7 @@ namespace Infrastructure.Repositories
             return new PagedResult<Turma>(items, totalCount, pageNumber, pageSize);
         }
 
-        public async Task<Turma> GetByIdAsync(int id)
+        public async Task<Turma> GetByIdAsync(Guid id)
         {
             Turma turma = await _context.Turmas.FirstOrDefaultAsync(c => c.Id == id);
 
@@ -71,7 +71,7 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
             Turma turma = await _context.Turmas.FindAsync(id);
 

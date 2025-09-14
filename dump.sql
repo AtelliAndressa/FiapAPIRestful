@@ -10,9 +10,9 @@ GO
 
 BEGIN TRANSACTION;
 CREATE TABLE [Alunos] (
-    [Id] int NOT NULL IDENTITY,
+    [Id] uniqueidentifier NOT NULL DEFAULT (NEWSEQUENTIALID()),
     [Nome] nvarchar(max) NOT NULL,
-    [Cpf] nvarchar(max) NOT NULL,
+    [Cpf] nvarchar(450) NOT NULL,
     [Email] nvarchar(max) NOT NULL,
     [DataNascimento] datetime2 NOT NULL,
     CONSTRAINT [PK_Alunos] PRIMARY KEY ([Id])
@@ -46,7 +46,7 @@ CREATE TABLE [AspNetUsers] (
 );
 
 CREATE TABLE [Turmas] (
-    [Id] int NOT NULL IDENTITY,
+    [Id] uniqueidentifier NOT NULL DEFAULT (NEWSEQUENTIALID()),
     [Nome] nvarchar(max) NOT NULL,
     [Descricao] nvarchar(max) NOT NULL,
     CONSTRAINT [PK_Turmas] PRIMARY KEY ([Id])
@@ -97,14 +97,16 @@ CREATE TABLE [AspNetUserTokens] (
 );
 
 CREATE TABLE [Matriculas] (
-    [Id] int NOT NULL IDENTITY,
-    [AlunoId] int NOT NULL,
-    [TurmaId] int NOT NULL,
+    [Id] uniqueidentifier NOT NULL DEFAULT (NEWSEQUENTIALID()),
+    [AlunoId] uniqueidentifier NOT NULL,
+    [TurmaId] uniqueidentifier NOT NULL,
     [DataMatricula] datetime2 NOT NULL,
     CONSTRAINT [PK_Matriculas] PRIMARY KEY ([Id]),
     CONSTRAINT [FK_Matriculas_Alunos_AlunoId] FOREIGN KEY ([AlunoId]) REFERENCES [Alunos] ([Id]) ON DELETE CASCADE,
     CONSTRAINT [FK_Matriculas_Turmas_TurmaId] FOREIGN KEY ([TurmaId]) REFERENCES [Turmas] ([Id]) ON DELETE CASCADE
 );
+
+CREATE UNIQUE INDEX [IX_Alunos_Cpf] ON [Alunos] ([Cpf]);
 
 CREATE INDEX [IX_AspNetRoleClaims_RoleId] ON [AspNetRoleClaims] ([RoleId]);
 
@@ -125,29 +127,7 @@ CREATE INDEX [IX_Matriculas_AlunoId] ON [Matriculas] ([AlunoId]);
 CREATE INDEX [IX_Matriculas_TurmaId] ON [Matriculas] ([TurmaId]);
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20250912135412_InitialCreate', N'9.0.9');
-
-INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20250912213210_UpdateTurmaProperties', N'9.0.9');
-
-DECLARE @var sysname;
-SELECT @var = [d].[name]
-FROM [sys].[default_constraints] [d]
-INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
-WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Alunos]') AND [c].[name] = N'Cpf');
-IF @var IS NOT NULL EXEC(N'ALTER TABLE [Alunos] DROP CONSTRAINT [' + @var + '];');
-ALTER TABLE [Alunos] ALTER COLUMN [Cpf] nvarchar(450) NOT NULL;
-
-CREATE UNIQUE INDEX [IX_Alunos_Cpf] ON [Alunos] ([Cpf]);
-
-INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20250913211811_UpdateProperties', N'9.0.9');
-
-INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20250913214753_TurmaUpdateProperties', N'9.0.9');
-
-INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20250913215053_TurmasUpdateProperties', N'9.0.9');
+VALUES (N'20250914144537_CriacaoInicialComGuids', N'9.0.9');
 
 COMMIT;
 GO

@@ -26,6 +26,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminDto model)
     {
         await _authService.RegisterAdminAsync(model);
+
         return Ok(new { Status = "Success", Message = "Administrador criado com sucesso!" });
     }
 
@@ -39,6 +40,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginDto model)
     {
         var token = await _authService.LoginAsync(model);
+
         return Ok(new { token });
     }
 
@@ -53,7 +55,9 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto model)
     {
         string username = User.Identity!.Name!;
+
         await _authService.ChangePasswordAsync(username, model);
+
         return Ok(new { Status = "Success", Message = "Senha alterada com sucesso!" });
     }
 
@@ -68,6 +72,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> ResetPasswordAdmin([FromBody] ResetPasswordDto model)
     {
         await _authService.ResetPasswordByAdminAsync(model);
+
         return Ok(new { Status = "Success", Message = "Senha do usuário redefinida com sucesso pelo administrador!" });
     }
 }

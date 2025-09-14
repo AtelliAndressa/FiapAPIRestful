@@ -5,7 +5,7 @@ namespace Core.Domain.Interfaces
 {
     public interface ITurmaRepository
     {
-        Task<Turma> GetByIdAsync(int id);
+        Task<Turma> GetByIdAsync(Guid id);
 
         Task<PagedResult<Turma>> GetAllAsync(int pageNumber, int pageSize);
 
@@ -13,7 +13,7 @@ namespace Core.Domain.Interfaces
 
         Task UpdateAsync(Turma turma);
 
-        Task DeleteAsync(int id);
+        Task DeleteAsync(Guid id);
 
         Task<bool> IsTeamAsync(string nome);
     }

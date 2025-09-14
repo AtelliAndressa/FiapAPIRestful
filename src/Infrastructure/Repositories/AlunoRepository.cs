@@ -46,7 +46,7 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
             Aluno aluno = await _context.Alunos.FindAsync(id);
 
@@ -88,7 +88,7 @@ namespace Infrastructure.Repositories
             return new PagedResult<Aluno>(items, totalCount, pageNumber, pageSize);
         }
 
-        public async Task<Aluno> GetByIdAsync(int id)
+        public async Task<Aluno> GetByIdAsync(Guid id)
         {
             Aluno aluno = await _context.Alunos
                 .AsNoTracking()

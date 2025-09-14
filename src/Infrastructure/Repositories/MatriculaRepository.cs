@@ -15,7 +15,7 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<Matricula> GetByIdAsync(int id)
+        public async Task<Matricula> GetByIdAsync(Guid id)
         {
             Matricula matricula = await _context.Matriculas
                 .Include(m => m.Aluno)
@@ -51,13 +51,13 @@ namespace Infrastructure.Repositories
             existingMatricula.DataMatricula = matricula.DataMatricula;
         }
 
-        public async Task<bool> IsStudentAlreadyEnrolledAsync(int alunoId, int turmaId)
+        public async Task<bool> IsStudentAlreadyEnrolledAsync(Guid alunoId, Guid turmaId)
         {
             return await _context.Matriculas
                 .AnyAsync(m => m.AlunoId == alunoId && m.TurmaId == turmaId);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
             Matricula matricula = await _context.Matriculas.FindAsync(id);
 
@@ -85,7 +85,7 @@ namespace Infrastructure.Repositories
             return new PagedResult<Matricula>(items, totalCount, pageNumber, pageSize);
         }
 
-        public async Task<PagedResult<Matricula>> GetByStudentIdAsync(int alunoId, int pageNumber, int pageSize)
+        public async Task<PagedResult<Matricula>> GetByStudentIdAsync(Guid alunoId, int pageNumber, int pageSize)
         {
             IQueryable<Matricula> query = _context.Matriculas
                 .Where(m => m.AlunoId == alunoId);
@@ -104,7 +104,7 @@ namespace Infrastructure.Repositories
             return new PagedResult<Matricula>(items, totalCount, pageNumber, pageSize);
         }
 
-        public async Task<PagedResult<Matricula>> GetByTeamIdAsync(int turmaId, int pageNumber, int pageSize)
+        public async Task<PagedResult<Matricula>> GetByTeamIdAsync(Guid turmaId, int pageNumber, int pageSize)
         {
             IQueryable<Matricula> query = _context.Matriculas
                 .Where(m => m.TurmaId == turmaId);

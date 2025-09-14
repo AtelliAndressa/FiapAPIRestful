@@ -5,7 +5,7 @@ namespace Core.Application.Interfaces
 {
     public interface IAlunoService
     {
-        Task<AlunoDto> GetByIdAsync(int id);
+        Task<AlunoDto> GetByIdAsync(Guid id);
 
         Task<PagedResult<AlunoDto>> GetAllAsync(int pageNumber, int pageSize);
 
@@ -13,8 +13,8 @@ namespace Core.Application.Interfaces
 
         Task AddAsync(CreateAlunoDto alunoDto);
 
-        Task UpdateAsync(int id, UpdateAlunoDto alunoDto);
+        Task UpdateAsync(Guid id, UpdateAlunoDto alunoDto);
 
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(Guid id);
     }
 }

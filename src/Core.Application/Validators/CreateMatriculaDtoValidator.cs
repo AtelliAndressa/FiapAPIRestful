@@ -8,10 +8,10 @@ public class CreateMatriculaDtoValidator : AbstractValidator<CreateMatriculaDto>
     public CreateMatriculaDtoValidator()
     {
         RuleFor(x => x.AlunoId)
-            .GreaterThan(0).WithMessage("O AlunoId deve ser maior que zero.");
+            .NotEmpty().WithMessage("O AlunoId é obrigatório.");
 
         RuleFor(x => x.TurmaId)
-            .GreaterThan(0).WithMessage("O TurmaId deve ser maior que zero.");
+            .NotEmpty().WithMessage("O TurmaId é obrigatório.");
 
         RuleFor(x => x.DataMatricula)
             .NotEmpty().WithMessage("A data de matrícula é obrigatória.")

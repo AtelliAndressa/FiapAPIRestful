@@ -48,7 +48,7 @@ namespace Core.Application.Services
             await _turmaRepository.AddAsync(turma);
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
             Turma turma = await _turmaRepository.GetByIdAsync(id);
 
@@ -83,7 +83,7 @@ namespace Core.Application.Services
             );
         }
 
-        public async Task<TurmaDto> GetByIdAsync(int id)
+        public async Task<TurmaDto> GetByIdAsync(Guid id)
         {
             Turma turma = await _turmaRepository.GetByIdAsync(id);
 
@@ -95,7 +95,7 @@ namespace Core.Application.Services
             return new TurmaDto(turma.Id, turma.Nome, turma.Descricao, 0);
         }
 
-        public async Task UpdateAsync(int id, UpdateTurmaDto turmaDto)
+        public async Task UpdateAsync(Guid id, UpdateTurmaDto turmaDto)
         {
             ValidationResult validationResult = await _validator.ValidateAsync(turmaDto);
 

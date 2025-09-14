@@ -21,6 +21,8 @@ namespace Application.Tests.Services
         private readonly Mock<IValidator<UpdateTurmaDto>> _validatorMock;
         private readonly TurmaService _turmaService;
 
+        private readonly Guid _fakeTurmaId = Guid.NewGuid();
+
         public TurmaServiceTests()
         {
             _turmaRepoMock = new Mock<ITurmaRepository>();
@@ -42,16 +44,16 @@ namespace Application.Tests.Services
         [Fact]
         public async Task GetByIdAsync_WhenTurmaExists_ShouldReturnTurmaDto()
         {
-            var fakeTurma = new Turma { Id = 1, Nome = "Turma A", Descricao = "Desc A" };
+            var fakeTurma = new Turma { Id = _fakeTurmaId, Nome = "Turma A", Descricao = "Desc A" };
 
-            _turmaRepoMock.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(fakeTurma);
+            _turmaRepoMock.Setup(repo => repo.GetByIdAsync(_fakeTurmaId)).ReturnsAsync(fakeTurma);
 
-            var result = await _turmaService.GetByIdAsync(1);
+            var result = await _turmaService.GetByIdAsync(_fakeTurmaId);
 
             Assert.NotNull(result);
             Assert.IsType<TurmaDto>(result);
             Assert.Equal("Turma A", result.Nome);
-            Assert.Equal(1, result.Id);
+            Assert.Equal(_fakeTurmaId, result.Id);
         }
 
         /// <summary>
@@ -62,9 +64,9 @@ namespace Application.Tests.Services
         [Fact]
         public async Task GetByIdAsync_WhenTurmaDoesNotExist_ShouldThrowValidationException()
         {
-            _turmaRepoMock.Setup(repo => repo.GetByIdAsync(99)).ReturnsAsync((Turma)null);
+            _turmaRepoMock.Setup(repo => repo.GetByIdAsync(_fakeTurmaId)).ReturnsAsync((Turma)null);
 
-            Func<Task> act = async () => await _turmaService.GetByIdAsync(99);
+            Func<Task> act = async () => await _turmaService.GetByIdAsync(_fakeTurmaId);
 
             var exception = await Assert.ThrowsAsync<ValidationException>(act);
 
@@ -82,7 +84,7 @@ namespace Application.Tests.Services
         {
             var fakeTurmaList = new List<Turma>
             {
-                new Turma { Id = 1, Nome = "Turma A", Descricao = "Desc A", Matriculas = new List<Matricula>() }
+                new Turma { Id = _fakeTurmaId, Nome = "Turma A", Descricao = "Desc A", Matriculas = new List<Matricula>() }
             };
 
             var fakeRepoResult = new PagedResult<Turma>(fakeTurmaList, 1, 1, 10);

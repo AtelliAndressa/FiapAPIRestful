@@ -105,7 +105,7 @@ namespace Core.Application.Services
             await _matriculaRepository.UpdateAsync(existingMatricula);
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
             Matricula matricula = await _matriculaRepository.GetByIdAsync(id);
 
@@ -119,7 +119,7 @@ namespace Core.Application.Services
             return true;
         }
 
-        public async Task<MatriculaDto> GetByIdAsync(int id)
+        public async Task<MatriculaDto> GetByIdAsync(Guid id)
         {
             Matricula matricula = await _matriculaRepository.GetByIdAsync(id);
 
@@ -155,7 +155,7 @@ namespace Core.Application.Services
             return new PagedResult<MatriculaDto>(itemsDto, pagedResult.TotalCount, pageNumber, pageSize);
         }
 
-        public async Task<PagedResult<MatriculaDto>> GetByStudentIdAsync(int alunoId, int pageNumber, int pageSize)
+        public async Task<PagedResult<MatriculaDto>> GetByStudentIdAsync(Guid alunoId, int pageNumber, int pageSize)
         {
             PagedResult<Matricula> pagedResult = await _matriculaRepository.GetByStudentIdAsync(alunoId, pageNumber, pageSize);
 
@@ -164,7 +164,7 @@ namespace Core.Application.Services
             return new PagedResult<MatriculaDto>(itemsDto, pagedResult.TotalCount, pageNumber, pageSize);
         }
 
-        public async Task<PagedResult<MatriculaDto>> GetByTeamIdAsync(int turmaId, int pageNumber, int pageSize)
+        public async Task<PagedResult<MatriculaDto>> GetByTeamIdAsync(Guid turmaId, int pageNumber, int pageSize)
         {
             PagedResult<Matricula> pagedResult = await _matriculaRepository.GetByTeamIdAsync(turmaId, pageNumber, pageSize);
 

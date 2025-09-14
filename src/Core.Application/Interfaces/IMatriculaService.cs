@@ -5,18 +5,18 @@ namespace Core.Application.Interfaces
 {
     public interface IMatriculaService
     {
-        Task<MatriculaDto> GetByIdAsync(int id);
+        Task<MatriculaDto> GetByIdAsync(Guid id);
 
         Task<MatriculaDto> AddAsync(CreateMatriculaDto matricula);
 
         Task UpdateAsync(MatriculaDto matricula);
 
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(Guid id);
 
         Task<PagedResult<MatriculaDto>> GetAllAsync(int pageNumber, int pageSize);
 
-        Task<PagedResult<MatriculaDto>> GetByStudentIdAsync(int alunoId, int pageNumber, int pageSize);
+        Task<PagedResult<MatriculaDto>> GetByStudentIdAsync(Guid alunoId, int pageNumber, int pageSize);
 
-        Task<PagedResult<MatriculaDto>> GetByTeamIdAsync(int turmaId, int pageNumber, int pageSize);
+        Task<PagedResult<MatriculaDto>> GetByTeamIdAsync(Guid turmaId, int pageNumber, int pageSize);
     }
 }

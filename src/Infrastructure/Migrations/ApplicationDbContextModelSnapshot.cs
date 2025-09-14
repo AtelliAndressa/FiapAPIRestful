@@ -24,11 +24,10 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Domain.Entities.Aluno", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Cpf")
                         .IsRequired()
@@ -55,20 +54,19 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Domain.Entities.Matricula", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AlunoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AlunoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DataMatricula")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TurmaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TurmaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -81,11 +79,10 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Domain.Entities.Turma", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Descricao")
                         .IsRequired()

@@ -17,6 +17,8 @@ namespace Application.Tests.Services
         private readonly Mock<IValidator<UpdateAlunoDto>> _validatorMock;
         private readonly AlunoService _alunoService;
 
+        private readonly Guid _fakeAlunoId = Guid.NewGuid();
+
         public AlunoServiceTests()
         {
             _alunoRepoMock = new Mock<IAlunoRepository>();
@@ -40,16 +42,16 @@ namespace Application.Tests.Services
         {
             var fakeAluno = new Aluno
             {
-                Id = 1,
+                Id = _fakeAlunoId,
                 Nome = "Aluno Teste",
                 Cpf = "12345678901",
                 Email = "teste@email.com",
                 DataNascimento = new DateTime(2000, 1, 1)
             };
 
-            _alunoRepoMock.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(fakeAluno);
+            _alunoRepoMock.Setup(repo => repo.GetByIdAsync(_fakeAlunoId)).ReturnsAsync(fakeAluno);
 
-            var result = await _alunoService.GetByIdAsync(1);
+            var result = await _alunoService.GetByIdAsync(_fakeAlunoId);
 
             Assert.NotNull(result);
             Assert.IsType<AlunoDto>(result);
@@ -65,9 +67,9 @@ namespace Application.Tests.Services
         [Fact]
         public async Task GetByIdAsync_WhenAlunoDoesNotExist_ShouldThrowValidationException()
         {
-            _alunoRepoMock.Setup(repo => repo.GetByIdAsync(99)).ReturnsAsync((Aluno)null);
+            _alunoRepoMock.Setup(repo => repo.GetByIdAsync(_fakeAlunoId)).ReturnsAsync((Aluno)null);
 
-            Func<Task> act = async () => await _alunoService.GetByIdAsync(99);
+            Func<Task> act = async () => await _alunoService.GetByIdAsync(_fakeAlunoId);
 
             var exception = await Assert.ThrowsAsync<ValidationException>(act);
 
@@ -85,7 +87,7 @@ namespace Application.Tests.Services
         {
             var fakeAlunoList = new List<Aluno>
             {
-                new Aluno { Id = 1, Nome = "Aluno Teste 1", Cpf = "111", Email = "a@a.com" }
+                new Aluno { Id = _fakeAlunoId, Nome = "Aluno Teste 1", Cpf = "111", Email = "a@a.com" }
             };
 
             var fakeRepoResult = new PagedResult<Aluno>(fakeAlunoList, 1, 1, 10);
@@ -104,7 +106,7 @@ namespace Application.Tests.Services
 
             Assert.Equal("a@a.com", itemUnico.Email);
             Assert.Equal("Aluno Teste 1", itemUnico.Nome);
-            Assert.Equal(1, itemUnico.Id);
+            Assert.Equal(_fakeAlunoId, itemUnico.Id);
         }
 
         /// <summary>
@@ -144,8 +146,8 @@ namespace Application.Tests.Services
 
             var fakeAlunoList = new List<Aluno>
             {
-                new Aluno { Id = 1, Nome = "Aluno Teste 1", Cpf = "111", Email = "a@a.com", DataNascimento = new DateTime(2000, 1, 1) },
-                new Aluno { Id = 2, Nome = "Outro Teste 2", Cpf = "222", Email = "b@b.com", DataNascimento = new DateTime(2001, 1, 1) }
+                new Aluno { Id = _fakeAlunoId, Nome = "Aluno Teste 1", Cpf = "111", Email = "a@a.com", DataNascimento = new DateTime(2000, 1, 1) },
+                new Aluno { Id = _fakeAlunoId, Nome = "Outro Teste 2", Cpf = "222", Email = "b@b.com", DataNascimento = new DateTime(2001, 1, 1) }
             };
 
             var fakeRepoResult = new PagedResult<Aluno>(fakeAlunoList, 2, pageNumber, pageSize);
@@ -175,7 +177,7 @@ namespace Application.Tests.Services
         public async Task AddAsync_WhenCpfAlreadyExists_ShouldThrowValidationException()
         {
             var createDto = new CreateAlunoDto("Aluno Fantasma", "fantasma@email.com", "111222333", DateTime.Now);
-            var existingAluno = new Aluno { Id = 99, Nome = "Usuario Antigo", Cpf = "111222333", Email = "teste1@gmail.com"};
+            var existingAluno = new Aluno { Id = _fakeAlunoId, Nome = "Usuario Antigo", Cpf = "111222333", Email = "teste1@gmail.com"};
 
             _createValidatorMock.Setup(v => v.ValidateAsync(createDto, It.IsAny<CancellationToken>()))
                                 .ReturnsAsync(new ValidationResult());

@@ -38,7 +38,7 @@ public class MatriculasController : ControllerBase
     /// <returns></returns>
     [HttpGet("aluno/{alunoId:int}")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> GetByAlunoId(int alunoId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetByAlunoId(Guid alunoId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         PagedResult<MatriculaDto> matriculas = await _matriculaService.GetByStudentIdAsync(alunoId, pageNumber, pageSize);
 
@@ -57,7 +57,7 @@ public class MatriculasController : ControllerBase
     /// <returns></returns>
     [HttpGet("Turma/{turmaId:int}")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> GetByTeamId(int turmaId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetByTeamId(Guid turmaId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         PagedResult<MatriculaDto> matriculas = await _matriculaService.GetByTeamIdAsync(turmaId, pageNumber, pageSize);
 
@@ -108,7 +108,7 @@ public class MatriculasController : ControllerBase
     /// <returns></returns>
     [HttpDelete("{id}")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(Guid id)
     {
         await _matriculaService.DeleteAsync(id);
 

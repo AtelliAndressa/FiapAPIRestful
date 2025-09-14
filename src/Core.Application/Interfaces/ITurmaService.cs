@@ -5,14 +5,14 @@ namespace Core.Application.Interfaces
 {
     public interface ITurmaService
     {
-        Task<TurmaDto> GetByIdAsync(int id);
+        Task<TurmaDto> GetByIdAsync(Guid id);
 
         Task<PagedResult<TurmaDto>> GetAllAsync(int pageNumber, int pageSize);
 
         Task AddAsync(CreateTurmaDto turmaDto);
 
-        Task UpdateAsync(int id, UpdateTurmaDto turmaDto);
+        Task UpdateAsync(Guid id, UpdateTurmaDto turmaDto);
 
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(Guid id);
     }
 }

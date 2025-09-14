@@ -5,7 +5,7 @@ namespace Core.Domain.Interfaces
 {
     public interface IAlunoRepository
     {
-        Task<Aluno> GetByIdAsync(int id);
+        Task<Aluno> GetByIdAsync(Guid id);
 
         Task<PagedResult<Aluno>> GetAllAsync(int pageNumber, int pageSize);
 
@@ -15,7 +15,7 @@ namespace Core.Domain.Interfaces
 
         Task UpdateAsync(Aluno aluno);
 
-        Task DeleteAsync(int id);
+        Task DeleteAsync(Guid id);
 
         Task<Aluno> GetByCpfAsync(string cpf);
     }

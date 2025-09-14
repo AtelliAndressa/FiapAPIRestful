@@ -50,7 +50,7 @@ namespace Core.Application.Services
             await _alunoRepository.AddAsync(aluno);
         }
 
-        public async Task<AlunoDto> GetByIdAsync(int id)
+        public async Task<AlunoDto> GetByIdAsync(Guid id)
         {
             Aluno aluno = await _alunoRepository.GetByIdAsync(id);
 
@@ -62,7 +62,7 @@ namespace Core.Application.Services
             return new AlunoDto(aluno.Id, aluno.Nome, aluno.Cpf, aluno.Email, aluno.DataNascimento);
         }
 
-        public async Task UpdateAsync(int id, UpdateAlunoDto alunoDto)
+        public async Task UpdateAsync(Guid id, UpdateAlunoDto alunoDto)
         {
             ValidationResult validationResult = await _validator.ValidateAsync(alunoDto);
 
@@ -85,7 +85,7 @@ namespace Core.Application.Services
             await _alunoRepository.UpdateAsync(aluno);
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
             Aluno aluno = await _alunoRepository.GetByIdAsync(id);
 

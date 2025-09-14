@@ -8,7 +8,7 @@ public class MatriculaDtoValidator : AbstractValidator<MatriculaDto>
     public MatriculaDtoValidator()
     {
         RuleFor(x => x.Id)
-            .GreaterThan(0).WithMessage("O Id da matrícula deve ser maior que zero.");
+            .NotEmpty().WithMessage("O Id da matricula é obrigatório.");
 
         RuleFor(x => x.Aluno)
             .NotNull().WithMessage("O aluno é obrigatório.");

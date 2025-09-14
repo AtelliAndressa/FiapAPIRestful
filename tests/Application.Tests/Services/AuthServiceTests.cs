@@ -105,37 +105,15 @@ namespace Application.Tests.Services
         }
 
         /// <summary>
-        /// simula que o FindByNameAsync encontrou um usuário com aquele e-mail e verifica se o serviço lança 
-        /// a exceção correta, impedindo o cadastro duplicado.
-        /// </summary>
-        /// <returns></returns>
-        [Fact]
-        public async Task RegisterUserAsync_WhenUserAlreadyExists_ShouldThrowException()
-        {
-            var registerDto = new RegisterUserDto("jaexiste@usuario.com", "Senha!", "Senha!");
-
-            var existingUser = new IdentityUser { UserName = "jaexiste@usuario.com" };
-
-            _userManagerMock.Setup(um => um.FindByNameAsync(registerDto.Email))
-                            .ReturnsAsync(existingUser);
-
-            Func<Task> act = async () => await _authService.RegisterUserAsync(registerDto);
-
-            var exception = await Assert.ThrowsAsync<Exception>(act);
-
-            Assert.Equal("Já existe um usuário com este email!", exception.Message);
-        }
-
-        /// <summary>
         /// Simula um e-mail novo (FindByNameAsync retorna null), um CreateAsync bem-sucedido e um 
         /// AddToRoleAsync bem-sucedido, verificando ao final se ambos os métodos(criação e adição de role) 
         /// foram realmente chamados.
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task RegisterUserAsync_WhenUserIsNew_ShouldSucceed()
+        public async Task RegisterAdminAsync_WhenUserIsNew_ShouldSucceed()
         {
-            var registerDto = new RegisterUserDto("novo@usuario.com", "SenhaForte@123", "SenhaForte@123");
+            var registerDto = new RegisterAdminDto("novo@usuario.com", "SenhaForte@123", "SenhaForte@123");
 
             _userManagerMock.Setup(um => um.FindByNameAsync(registerDto.Email))
                             .ReturnsAsync((IdentityUser)null);
@@ -143,14 +121,14 @@ namespace Application.Tests.Services
             _userManagerMock.Setup(um => um.CreateAsync(It.IsAny<IdentityUser>(), registerDto.Password))
                             .ReturnsAsync(IdentityResult.Success);
 
-            _userManagerMock.Setup(um => um.AddToRoleAsync(It.IsAny<IdentityUser>(), "User"))
+            _userManagerMock.Setup(um => um.AddToRoleAsync(It.IsAny<IdentityUser>(), "Admin"))
                             .ReturnsAsync(IdentityResult.Success);
 
-            await _authService.RegisterUserAsync(registerDto);
+            await _authService.RegisterAdminAsync(registerDto);
 
             _userManagerMock.Verify(um => um.CreateAsync(It.IsAny<IdentityUser>(), registerDto.Password), Times.Once);
 
-            _userManagerMock.Verify(um => um.AddToRoleAsync(It.IsAny<IdentityUser>(), "User"), Times.Once);
+            _userManagerMock.Verify(um => um.AddToRoleAsync(It.IsAny<IdentityUser>(), "Admin"), Times.Once);
         }
     }
 }

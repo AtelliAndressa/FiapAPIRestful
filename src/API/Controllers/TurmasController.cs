@@ -25,7 +25,7 @@ public class TurmasController : ControllerBase
     /// <returns></returns>
     [HttpGet("{id}")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<IActionResult> GetById(Guid id)
     {
         TurmaDto turma = await _turmaService.GetByIdAsync(id);
 
@@ -73,7 +73,7 @@ public class TurmasController : ControllerBase
     /// <returns></returns>
     [HttpPut("{id}")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> Put(int id, [FromBody] UpdateTurmaDto turmaDto)
+    public async Task<IActionResult> Put(Guid id, [FromBody] UpdateTurmaDto turmaDto)
     {
         await _turmaService.UpdateAsync(id, turmaDto);
 
@@ -88,7 +88,7 @@ public class TurmasController : ControllerBase
     /// <returns></returns>
     [HttpDelete("{id}")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(Guid id)
     {
         await _turmaService.DeleteAsync(id);
         return NoContent();

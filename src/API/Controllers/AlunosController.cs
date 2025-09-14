@@ -25,7 +25,7 @@ public class AlunosController : ControllerBase
     /// <returns></returns>
     [HttpGet("{id}")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<IActionResult> GetById(Guid id)
     {
         AlunoDto aluno = await _alunoService.GetByIdAsync(id);
 
@@ -97,7 +97,7 @@ public class AlunosController : ControllerBase
     /// <returns></returns>
     [HttpPut("{id}")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> Put(int id, [FromBody] UpdateAlunoDto alunoDto)
+    public async Task<IActionResult> Put(Guid id, [FromBody] UpdateAlunoDto alunoDto)
     {
         await _alunoService.UpdateAsync(id, alunoDto);
 
@@ -112,7 +112,7 @@ public class AlunosController : ControllerBase
     /// <returns></returns>
     [HttpDelete("{id}")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(Guid id)
     {
         bool result = await _alunoService.DeleteAsync(id);
 

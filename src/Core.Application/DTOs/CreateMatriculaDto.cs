@@ -6,15 +6,17 @@
         {
         }
 
-        public CreateMatriculaDto(int alunoId, int turmaId, DateTime dataMatricula)
+        public CreateMatriculaDto(Guid alunoId, Guid turmaId, DateTime dataMatricula)
         {
             AlunoId = alunoId;
             TurmaId = turmaId;
             DataMatricula = dataMatricula;
         }
 
-        public int AlunoId { get; set; }
-        public int TurmaId { get; set; }
+        public Guid AlunoId { get; set; }
+
+        public Guid TurmaId { get; set; }
+
         public DateTime DataMatricula { get; set; }
     }
 }

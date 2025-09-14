@@ -4,7 +4,7 @@
     {
         public TurmaDto() { }
 
-        public TurmaDto(int id, string nome, string descricao, int matriculas)
+        public TurmaDto(Guid id, string nome, string descricao, int matriculas)
         {
             Id = id;
             Nome = nome;
@@ -12,7 +12,7 @@
             QuantidadeAlunos = matriculas;
         }
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Nome { get; set; } = string.Empty;
 

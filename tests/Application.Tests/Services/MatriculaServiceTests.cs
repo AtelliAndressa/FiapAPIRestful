@@ -16,8 +16,11 @@ namespace Application.Tests.Services
         private readonly Mock<ITurmaRepository> _turmaRepoMock;
         private readonly Mock<IValidator<CreateMatriculaDto>> _createValidatorMock;
         private readonly Mock<IValidator<MatriculaDto>> _validatorMock;
-
         private readonly MatriculaService _matriculaService;
+
+        private readonly Guid _fakeAlunoId = Guid.NewGuid();
+        private readonly Guid _fakeTurmaId = Guid.NewGuid();
+        private readonly Guid _fakeMatriculaId = Guid.NewGuid();
 
         public MatriculaServiceTests()
         {
@@ -44,27 +47,27 @@ namespace Application.Tests.Services
         [Fact]
         public async Task AddAsync_WithValidData_ShouldSucceedAndReturnRichDto()
         {
-            var createDto = new CreateMatriculaDto(1, 1, DateTime.Now);
+            var createDto = new CreateMatriculaDto(_fakeAlunoId, _fakeTurmaId, DateTime.Now);
 
             var fakeAluno = new Aluno
             {
-                Id = 1,
+                Id = _fakeAlunoId,
                 Nome = "Aluno Teste",
                 Cpf = "22580591866",
                 Email = "testeAluno@gmail.com",
                 DataNascimento = new DateTime(1983, 12, 14)
             };
 
-            var fakeTurma = new Turma { Id = 1, Nome = "Turma Teste", Descricao = "Desc" };
+            var fakeTurma = new Turma { Id = _fakeTurmaId, Nome = "Turma Teste", Descricao = "Desc" };
 
             _createValidatorMock.Setup(v => v.ValidateAsync(createDto, It.IsAny<CancellationToken>()))
                                 .ReturnsAsync(new ValidationResult());
 
-            _alunoRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(fakeAluno);
+            _alunoRepoMock.Setup(r => r.GetByIdAsync(_fakeAlunoId)).ReturnsAsync(fakeAluno);
 
-            _turmaRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(fakeTurma);
+            _turmaRepoMock.Setup(r => r.GetByIdAsync(_fakeTurmaId)).ReturnsAsync(fakeTurma);
 
-            _matriculaRepoMock.Setup(r => r.IsStudentAlreadyEnrolledAsync(1, 1)).ReturnsAsync(false);
+            _matriculaRepoMock.Setup(r => r.IsStudentAlreadyEnrolledAsync(_fakeAlunoId, _fakeTurmaId)).ReturnsAsync(false);
 
             var result = await _matriculaService.AddAsync(createDto);
 
@@ -84,27 +87,27 @@ namespace Application.Tests.Services
         [Fact]
         public async Task AddAsync_WhenStudentAlreadyEnrolled_ShouldThrowValidationException()
         {
-            var createDto = new CreateMatriculaDto(1, 1, new DateTime(2025, 1, 10));
+            var createDto = new CreateMatriculaDto(_fakeAlunoId, _fakeTurmaId, new DateTime(2025, 1, 10));
 
             var fakeAluno = new Aluno
             {
-                Id = 1,
+                Id = _fakeAlunoId,
                 Nome = "Aluno Teste Real",
                 Cpf = "12345678901",
                 Email = "aluno@teste.com",
                 DataNascimento = new DateTime(2000, 10, 14)
             };
 
-            var fakeTurma = new Turma { Id = 1, Nome = "Turma Teste Real", Descricao = "Desc Real" };
+            var fakeTurma = new Turma { Id = _fakeTurmaId, Nome = "Turma Teste Real", Descricao = "Desc Real" };
 
             _createValidatorMock.Setup(v => v.ValidateAsync(createDto, It.IsAny<CancellationToken>()))
                                 .ReturnsAsync(new ValidationResult());
 
-            _alunoRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(fakeAluno);
+            _alunoRepoMock.Setup(r => r.GetByIdAsync(_fakeAlunoId)).ReturnsAsync(fakeAluno);
 
-            _turmaRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(fakeTurma);
+            _turmaRepoMock.Setup(r => r.GetByIdAsync(_fakeTurmaId)).ReturnsAsync(fakeTurma);
 
-            _matriculaRepoMock.Setup(r => r.IsStudentAlreadyEnrolledAsync(1, 1)).ReturnsAsync(true);
+            _matriculaRepoMock.Setup(r => r.IsStudentAlreadyEnrolledAsync(_fakeAlunoId, _fakeTurmaId)).ReturnsAsync(true);
 
             Func<Task> act = async () => await _matriculaService.AddAsync(createDto);
 
@@ -123,12 +126,12 @@ namespace Application.Tests.Services
         [Fact]
         public async Task AddAsync_WhenAlunoNotFound_ShouldThrowValidationException()
         {
-            var createDto = new CreateMatriculaDto(99, 1, DateTime.Now);
+            var createDto = new CreateMatriculaDto(_fakeAlunoId, _fakeTurmaId, DateTime.Now);
 
             _createValidatorMock.Setup(v => v.ValidateAsync(createDto, It.IsAny<CancellationToken>()))
                                 .ReturnsAsync(new ValidationResult());
 
-            _alunoRepoMock.Setup(r => r.GetByIdAsync(99)).ReturnsAsync((Aluno)null);
+            _alunoRepoMock.Setup(r => r.GetByIdAsync(_fakeAlunoId)).ReturnsAsync((Aluno)null);
 
             Func<Task> act = async () => await _matriculaService.AddAsync(createDto);
 
@@ -147,11 +150,11 @@ namespace Application.Tests.Services
         [Fact]
         public async Task AddAsync_WhenTurmaNotFound_ShouldThrowValidationException()
         {
-            var createDto = new CreateMatriculaDto(1, 99, DateTime.Now);
+            var createDto = new CreateMatriculaDto(_fakeAlunoId, _fakeTurmaId, DateTime.Now);
 
             var fakeAluno = new Aluno
             {
-                Id = 1,
+                Id = _fakeAlunoId,
                 Nome = "Aluno Teste Real",
                 Cpf = "12345678901",
                 Email = "aluno@teste.com",
@@ -161,9 +164,9 @@ namespace Application.Tests.Services
             _createValidatorMock.Setup(v => v.ValidateAsync(createDto, It.IsAny<CancellationToken>()))
                                 .ReturnsAsync(new ValidationResult());
 
-            _alunoRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(fakeAluno);
+            _alunoRepoMock.Setup(r => r.GetByIdAsync(_fakeAlunoId)).ReturnsAsync(fakeAluno);
 
-            _turmaRepoMock.Setup(r => r.GetByIdAsync(99)).ReturnsAsync((Turma)null);
+            _turmaRepoMock.Setup(r => r.GetByIdAsync(_fakeTurmaId)).ReturnsAsync((Turma)null);
 
             Func<Task> act = async () => await _matriculaService.AddAsync(createDto);
 
@@ -184,18 +187,18 @@ namespace Application.Tests.Services
         {
             var fakeAluno = new Aluno
             {
-                Id = 1,
+                Id = _fakeAlunoId,
                 Nome = "Aluno Teste Real",
                 Cpf = "12345678901",
                 Email = "aluno@teste.com",
                 DataNascimento = new DateTime(2001, 12, 1)
             };
 
-            var fakeTurma = new Turma { Id = 1, Nome = "Turma Teste Real", Descricao = "Desc Real" };
+            var fakeTurma = new Turma { Id = _fakeTurmaId, Nome = "Turma Teste Real", Descricao = "Desc Real" };
 
             var fakeMatriculaList = new List<Matricula>
             {
-                new Matricula { Id = 1, Aluno = fakeAluno, Turma = fakeTurma, DataMatricula = DateTime.Now }
+                new Matricula { Id = _fakeAlunoId, Aluno = fakeAluno, Turma = fakeTurma, DataMatricula = DateTime.Now }
             };
 
             var fakeRepoResult = new PagedResult<Matricula>(fakeMatriculaList, 1, 1, 10);

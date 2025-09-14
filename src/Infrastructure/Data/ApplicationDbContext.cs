@@ -20,7 +20,20 @@ namespace Infrastructure.Data
 
             builder.Entity<Aluno>(entity =>
             {
+                entity.Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 entity.HasIndex(e => e.Cpf).IsUnique();
+            });
+
+            builder.Entity<Turma>(entity =>
+            {
+                entity.Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            });
+
+            builder.Entity<Matricula>(entity =>
+            {
+                entity.Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                entity.HasOne(m => m.Aluno).WithMany().HasForeignKey(m => m.AlunoId);
+                entity.HasOne(m => m.Turma).WithMany(t => t.Matriculas).HasForeignKey(m => m.TurmaId);
             });
         }
     }

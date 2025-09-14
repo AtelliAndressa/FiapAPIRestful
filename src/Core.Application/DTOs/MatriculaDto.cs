@@ -6,7 +6,7 @@
         {
         }
 
-        public MatriculaDto(int id, AlunoDto alunoDto, TurmaDto turmaDto, DateTime dataMatricula)
+        public MatriculaDto(Guid id, AlunoDto alunoDto, TurmaDto turmaDto, DateTime dataMatricula)
         {
             Id = id;
             this.Aluno = alunoDto;
@@ -14,9 +14,12 @@
             DataMatricula = dataMatricula;
         }
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
+
         public AlunoDto Aluno { get; set; } = new AlunoDto();
+
         public TurmaDto Turma { get; set; } = new TurmaDto();
+
         public DateTime DataMatricula { get; set; }
     }
 }
