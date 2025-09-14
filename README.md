@@ -1,30 +1,37 @@
 # Desafio API RESTful - Secretaria FIAP
 
-[cite_start]Esta é uma API RESTful desenvolvida em .NET 8 como solução para o Desafio .NET da FIAP[cite: 1]. [cite_start]A API gerencia alunos, turmas e matrículas [cite: 4][cite_start], implementando autenticação JWT e seguindo padrões de arquitetura DDD e Clean Code[cite: 60].
+Esta é uma API RESTful desenvolvida em .NET 8 como solução para o Desafio .NET da FIAP. A API gerencia alunos, turmas e matrículas, implementando autenticação JWT e seguindo padrões de arquitetura DDD e Clean Code.
 
 ## Requisitos Atendidos
 
 Este projeto atende a todos os requisitos funcionais (RF) e não funcionais (RNF) solicitados:
-- [cite_start]CRUD completo para Alunos e Turmas[cite: 9, 11].
-- [cite_start]Sistema de Matrícula com validação de duplicidade (RF05) [cite: 32] [cite_start]e visualização de alunos por turma[cite: 13].
-- [cite_start]Autenticação JWT com Roles e Políticas (Admin/User) (RF10)[cite: 44].
-- [cite_start]Listagens paginadas (10 por padrão) e ordenadas alfabeticamente (RF01)[cite: 24].
-- [cite_start]Contagem de alunos por turma na listagem (RF02)[cite: 26].
-- [cite_start]Busca de alunos por nome (RF09)[cite: 42].
-- [cite_start]Validações robustas (RF03, RF04, RF06, RF07), incluindo CPF/Email únicos, senhas fortes e regras de negócio[cite: 28, 30, 34, 37].
-- [cite_start]Senhas armazenadas com hash seguro (RF08)[cite: 40].
-- [cite_start]Documentação Swagger (RNF03)  [cite_start]e uso correto de verbos HTTP (RNF01)[cite: 48].
+- CRUD completo para Alunos e Turmas.
+- Sistema de Matrícula com validação de duplicidade (RF05) e visualização de alunos por turma.
+- Autenticação JWT com Política de Acesso exclusiva para Administradores (atendendo 100% ao RF10).
+- Listagens paginadas (10 por padrão) e ordenadas alfabeticamente (RF01).
+- Contagem de alunos por turma na listagem (RF02).
+- Busca de alunos por nome (RF09).
+- Validações robustas (RF03, RF04, RF06, RF07), incluindo CPF/Email únicos, senhas fortes e regras de negócio.
+- Senhas armazenadas com hash seguro (RF08).
+- Documentação Swagger (RNF03)  e uso correto de verbos HTTP (RNF01).
 
 ## Tecnologias Utilizadas
 
-- [cite_start]**Framework**: .NET 8 [cite: 56]
-- [cite_start]**Arquitetura**: Abordagem baseada em DDD (Domain, Application, Infrastructure, API) [cite: 60]
-- [cite_start]**Persistência**: Entity Framework Core 8 [cite: 58]
-- [cite_start]**Banco de Dados**: SQL Server [cite: 57]
-- [cite_start]**Autenticação**: ASP.NET Core Identity + JWT Bearer [cite: 44]
-- **Validação**: FluentValidation
-- [cite_start]**Testes**: xUnit, Moq, FluentAssertions (BN01) 
-- [cite_start]**Padrões**: Repository Pattern, Service Pattern, Injeção de Dependência, SRP[cite: 60].
+Framework: .NET 8
+
+Arquitetura: Abordagem baseada em DDD (Domain, Application, Infrastructure, API)
+
+Persistência: Entity Framework Core 8
+
+Banco de Dados: SQL Server
+
+Autenticação: ASP.NET Core Identity + JWT Bearer
+
+Validação: FluentValidation
+
+Testes: xUnit, Moq, FluentAssertions (BN01)
+
+Padrões: Repository Pattern, Service Pattern, Injeção de Dependência, SRP
 
 ---
 
@@ -48,13 +55,12 @@ Siga os passos abaixo para executar a aplicação localmente.
       "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=FiapApiRestifulDB;User ID=sa;Password=14112008;Encrypt=False;TrustServerCertificate=True;MultipleActiveResultSets=True"
     },
     ```
-    > **AVISO DE SEGURANÇA:** O arquivo acima contém uma senha. Em um projeto de produção, essa string de conexão deve ser gerenciada via User Secrets ou Azure Key Vault, e nunca deve ser enviada para um repositório Git.
 
 4.  Na mesma seção, configure o `Jwt`. O `"Key"` deve ser preenchido com a chave secreta configurada no seu User Secrets (conforme fizemos durante o desenvolvimento).
 
     ```json
     "Jwt": {
-      "Key": "COLOQUE_AQUI_A_SUA_CHAVE_SECRETA_DO_USER_SECRETS",
+      "Key": "Chave está no segredos do usuario na API",
       "Issuer": "https://localhost:7096",
       "Audience": "https://localhost:7096"
     },
@@ -80,7 +86,7 @@ dotnet run --project src/API
 A aplicação será iniciada e o terminal mostrará os endereços de escuta, incluindo https://localhost:7096.
 
 Usuário Administrador Inicial:
-Na primeira vez que a aplicação rodar, ela executará o SeedData automaticamente, criando as roles "Admin" e "User" e o usuário administrador padrão:
+Na primeira vez que a aplicação rodar, ela executará o SeedData automaticamente, criando a role "Admin" e o usuário administrador padrão:
 
 Usuário: admin@exemplo.com
 
