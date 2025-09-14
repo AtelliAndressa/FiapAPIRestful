@@ -55,7 +55,7 @@ public class MatriculasController : ControllerBase
     /// </summary>
     /// <param name="TurmaId"></param>
     /// <returns></returns>
-    [HttpGet("Turma/{TurmaId:int}")]
+    [HttpGet("Turma/{turmaId:int}")]
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> GetByTeamId(int turmaId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {

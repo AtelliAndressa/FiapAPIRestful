@@ -32,7 +32,6 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Login([FromBody] LoginDto model)
     {
         var token = await _authService.LoginAsync(model);
