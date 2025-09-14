@@ -51,8 +51,7 @@ public class TurmasController : ControllerBase
     }
 
     /// <summary>
-    /// Cria um novo registro de um Turma.
-    /// Só pode ser executado por um Administrador. 
+    /// Cria um novo registro de um Turma.     
     /// </summary>
     /// <param name="createTurmaDto"></param>
     /// <returns></returns>
@@ -66,8 +65,7 @@ public class TurmasController : ControllerBase
     }
 
     /// <summary>
-    /// Atualiza um registro de um Turma.
-    /// Só pode ser executado por um Administrador.
+    /// Atualiza um registro de um Turma.    
     /// </summary>
     /// <param name="TurmaDto"></param>
     /// <returns></returns>
@@ -81,8 +79,7 @@ public class TurmasController : ControllerBase
     }
 
     /// <summary>
-    /// Deleta o registro do Turma usando um id específico.
-    /// Só pode ser executado por um Administrador.
+    /// Deleta o registro do Turma usando um id específico.    
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>

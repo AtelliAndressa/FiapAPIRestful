@@ -70,8 +70,7 @@ public class MatriculasController : ControllerBase
     }
 
     /// <summary>
-    /// Cria um novo registro de matrícula.
-    /// Só pode ser executado por um Administrador.    
+    /// Cria um novo registro de matrícula.        
     /// </summary>
     /// <param name="matriculaDto"></param>
     /// <returns></returns>
@@ -86,8 +85,7 @@ public class MatriculasController : ControllerBase
     }
 
     /// <summary>
-    /// Atualiza um registro de uma matricula.
-    /// Só pode ser executado por um Administrador.
+    /// Atualiza um registro de uma matricula.    
     /// </summary>
     /// <param name="matriculaDto"></param>
     /// <returns></returns>
@@ -101,8 +99,7 @@ public class MatriculasController : ControllerBase
     }
 
     /// <summary>
-    /// Deleta o registro da matrícula usando um id específico.
-    /// Só pode ser executado por um Administrador.
+    /// Deleta o registro da matrícula usando um id específico.    
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>

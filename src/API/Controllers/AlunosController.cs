@@ -75,8 +75,7 @@ public class AlunosController : ControllerBase
     }
 
     /// <summary>
-    /// Cadastra um novo aluno no sistema.
-    /// Só pode ser executado por um Administrador.
+    /// Cadastra um novo aluno no sistema.    
     /// </summary>
     /// <param name="createAlunoDto"></param>
     /// <returns></returns>
@@ -90,8 +89,7 @@ public class AlunosController : ControllerBase
     }
 
     /// <summary>
-    /// Atualiza os dados de um aluno existente no sistema.
-    /// Só pode ser executado por um Administrador.
+    /// Atualiza os dados de um aluno existente no sistema.    
     /// </summary>
     /// <param name="alunoDto"></param>
     /// <returns></returns>
@@ -105,8 +103,7 @@ public class AlunosController : ControllerBase
     }
 
     /// <summary>
-    /// Exclui um aluno existente no sistema.
-    /// Só pode ser executado por um Administrador.
+    /// Exclui um aluno existente no sistema.    
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
