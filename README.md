@@ -55,7 +55,7 @@ Siga os passos abaixo para executar a aplicação localmente.
 
     ```json
     "Jwt": {
-      "Key": "SUA_CHAVE_SECRETA_MUITO_LONGA_E_SEGURA_DEVE_VIR_AQUI",
+      "Key": "",
       "Issuer": "https://localhost:7096",
       "Audience": "https://localhost:7096"
     },
