@@ -5,7 +5,7 @@ Esta é uma API RESTful desenvolvida em .NET 8 como solução para o Desafio .NE
 ## Requisitos Atendidos
 
 Este projeto atende a todos os requisitos funcionais (RF) e não funcionais (RNF) solicitados:
-- CRUD completo para Alunos e Turmas.
+- CRUD completo para Alunos, Turmas e Matricula.
 - Sistema de Matrícula com validação de duplicidade (RF05) e visualização de alunos por turma.
 - Autenticação JWT com Política de Acesso **exclusiva para Administradores** (atendendo 100% ao RF10).
 - Listagens paginadas (10 por padrão) e ordenadas alfabeticamente (RF01).
