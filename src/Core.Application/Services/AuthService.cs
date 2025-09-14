@@ -43,32 +43,6 @@ public class AuthService : IAuthService
             throw new Exception("Falha ao atribuir o perfil de administrador ao usuário.");
     }
 
-    public async Task RegisterUserAsync(RegisterUserDto model)
-    {
-        var userExists = await _userManager.FindByNameAsync(model.Email);
-
-        if (userExists != null)
-            throw new Exception("Já existe um usuário com este email!");
-
-        var newUser = new IdentityUser
-        {
-            Email = model.Email,
-            UserName = model.Email,
-            SecurityStamp = Guid.NewGuid().ToString(),
-            EmailConfirmed = true
-        };
-
-        var result = await _userManager.CreateAsync(newUser, model.Password);
-
-        if (!result.Succeeded)
-            throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
-
-        var roleResult = await _userManager.AddToRoleAsync(newUser, "User");
-
-        if (!roleResult.Succeeded)
-            throw new Exception("Falha ao atribuir o perfil de usuário.");
-    }
-
     public async Task<string> LoginAsync(LoginDto model)
     {
         var user = await _userManager.FindByNameAsync(model.Username);

@@ -30,19 +30,6 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost("register-user")]
-    [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto model)
-    {
-        await _authService.RegisterUserAsync(model);
-        return Ok(new { Status = "Success", Message = "Usuário criado com sucesso!" });
-    }
-
-    /// <summary>
     /// Recebe um e-mail e senha e, se as credenciais estiverem corretas, 
     /// retorna um token JWT para ser usado na autenticação das outras rotas.
     /// </summary>

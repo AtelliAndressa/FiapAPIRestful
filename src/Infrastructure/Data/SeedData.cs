@@ -10,7 +10,7 @@ public static class SeedData
         RoleManager<IdentityRole> roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         UserManager<IdentityUser> userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
-        string[] roleNames = { "Admin", "User" };
+        string[] roleNames = { "Admin"};
         IdentityResult roleResult;
 
         foreach (string roleName in roleNames)
