@@ -18,9 +18,9 @@ Este projeto atende a todos os requisitos funcionais (RF) e não funcionais (RNF
 
 ## Tecnologias Utilizadas
 
-- **Framework**: .NET 8 (atendendo ao requisito .NET Core >= 6) 
+- **Framework**: .NET 9 (atendendo ao requisito .NET Core >= 6) 
 - **Arquitetura**: Abordagem baseada em DDD (Domain-Driven Design)
-- **Persistência**: Entity Framework Core 8
+- **Persistência**: Entity Framework Core 9
 - **Banco de Dados**: SQL Server
 - **Autenticação**: ASP.NET Core Identity + JWT Bearer
 - **Validação**: FluentValidation
