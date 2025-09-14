@@ -209,7 +209,7 @@ namespace Application.Tests.Services
 
             var item = Assert.Single(result.Items);
 
-            Assert.Equal("Aluno Teste", item.Aluno.Nome);
+            Assert.Equal("Aluno Teste Real", item.Aluno.Nome);
         }
     }
 }

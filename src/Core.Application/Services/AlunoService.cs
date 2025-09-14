@@ -59,7 +59,7 @@ namespace Core.Application.Services
                 throw new ValidationException("Aluno não encontrado.");
             }
 
-            return new AlunoDto(aluno.Id, aluno.Nome, aluno.Email, aluno.Cpf, aluno.DataNascimento);
+            return new AlunoDto(aluno.Id, aluno.Nome, aluno.Cpf, aluno.Email, aluno.DataNascimento);
         }
 
         public async Task UpdateAsync(int id, UpdateAlunoDto alunoDto)

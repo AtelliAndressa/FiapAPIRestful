@@ -18,14 +18,14 @@ namespace Application.Tests.Services
     {
         private readonly Mock<ITurmaRepository> _turmaRepoMock;
         private readonly Mock<IValidator<CreateTurmaDto>> _createValidatorMock;
-        private readonly Mock<IValidator<TurmaDto>> _validatorMock;
+        private readonly Mock<IValidator<UpdateTurmaDto>> _validatorMock;
         private readonly TurmaService _turmaService;
 
         public TurmaServiceTests()
         {
             _turmaRepoMock = new Mock<ITurmaRepository>();
             _createValidatorMock = new Mock<IValidator<CreateTurmaDto>>();
-            _validatorMock = new Mock<IValidator<TurmaDto>>();
+            _validatorMock = new Mock<IValidator<UpdateTurmaDto>>();
 
             _turmaService = new TurmaService(
                 _turmaRepoMock.Object,
@@ -82,7 +82,7 @@ namespace Application.Tests.Services
         {
             var fakeTurmaList = new List<Turma>
             {
-                new Turma { Id = 1, Nome = "Turma A", Descricao = "Desc A" }
+                new Turma { Id = 1, Nome = "Turma A", Descricao = "Desc A", Matriculas = new List<Matricula>() }
             };
 
             var fakeRepoResult = new PagedResult<Turma>(fakeTurmaList, 1, 1, 10);
@@ -97,6 +97,7 @@ namespace Application.Tests.Services
             var item = Assert.Single(result.Items);
 
             Assert.Equal("Turma A", item.Nome);
+            Assert.Equal(0, item.QuantidadeAlunos);
         }
 
         /// <summary>
