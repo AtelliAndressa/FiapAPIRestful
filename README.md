@@ -11,7 +11,7 @@ Este projeto atende a todos os requisitos funcionais (RF) e não funcionais (RNF
 - Listagens paginadas (10 por padrão) e ordenadas alfabeticamente (RF01).
 - Contagem de alunos por turma na listagem (RF02).
 - Busca de alunos por nome (RF09).
-- Validações robustas (RF03, RF04, RF06, RF07), incluindo CPF/Email únicos, senhas fortes e regras de negócio.
+- Validações robustas (RF03, RF04, RF06, RF07), incluindo CPF único, senhas fortes e regras de negócio.
 - Senhas armazenadas com hash seguro (RF08).
 - Documentação Swagger (RNF03)  e uso correto de verbos HTTP (RNF01).
 - Modelagem de banco com chaves (GUID) e restrições de índice único (RNF02).
@@ -55,7 +55,7 @@ Siga os passos abaixo para executar a aplicação localmente.
 
     ```json
     "Jwt": {
-      "Key": "SUA_CHAVE_SECRETA_MUITO_LONGA_E_SEGURA_DEVE_VIR_AQUI",
+      "Key": "",
       "Issuer": "https://localhost:7096",
       "Audience": "https://localhost:7096"
     },
