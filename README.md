@@ -35,7 +35,7 @@ Siga os passos abaixo para executar a aplicação localmente.
 
 ### 1. Pré-requisitos
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
 - SQL Server LocalDB (geralmente instalado com o Visual Studio 2022).
 
 ### 2. Configuração da Conexão
