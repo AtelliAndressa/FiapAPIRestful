@@ -70,7 +70,6 @@ builder.Services.AddScoped<IValidator<UpdateTurmaDto>, UpdateTurmaDtoValidator>(
 builder.Services.AddScoped<IValidator<CreateMatriculaDto>, CreateMatriculaDtoValidator>();
 builder.Services.AddScoped<IValidator<MatriculaDto>, MatriculaDtoValidator>();
 builder.Services.AddScoped<IValidator<RegisterAdminDto>, RegisterAdminDtoValidator>();
-builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 
 
 builder.Services.AddFluentValidationAutoValidation();
