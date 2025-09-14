@@ -56,7 +56,7 @@ namespace Core.Application.Services
 
             if (aluno == null)
             {
-                throw new ValidationException("Aluno não encontrado.");
+                return null;
             }
 
             return new AlunoDto(aluno.Id, aluno.Nome, aluno.Cpf, aluno.Email, aluno.DataNascimento);

@@ -49,7 +49,6 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-    options.AddPolicy("AdminOrUser", policy => policy.RequireRole("Admin", "User"));
 });
 
 builder.Services.AddScoped<IAuthService, AuthService>();

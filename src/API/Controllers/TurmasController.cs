@@ -24,7 +24,7 @@ public class TurmasController : ControllerBase
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id}")]
-    [Authorize(Policy = "AdminOrUser")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> GetById(int id)
     {
         TurmaDto turma = await _turmaService.GetByIdAsync(id);
@@ -42,7 +42,7 @@ public class TurmasController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    [Authorize(Policy = "AdminOrUser")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         PagedResult<TurmaDto> turmas = await _turmaService.GetAllAsync(pageNumber, pageSize);

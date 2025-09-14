@@ -23,7 +23,7 @@ public class MatriculasController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    [Authorize(Policy = "AdminOrUser")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         PagedResult<MatriculaDto> matriculas = await _matriculaService.GetAllAsync(pageNumber, pageSize);
@@ -37,7 +37,7 @@ public class MatriculasController : ControllerBase
     /// <param name="alunoId"></param>
     /// <returns></returns>
     [HttpGet("aluno/{alunoId:int}")]
-    [Authorize(Policy = "AdminOrUser")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> GetByAlunoId(int alunoId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         PagedResult<MatriculaDto> matriculas = await _matriculaService.GetByStudentIdAsync(alunoId, pageNumber, pageSize);
@@ -56,7 +56,7 @@ public class MatriculasController : ControllerBase
     /// <param name="TurmaId"></param>
     /// <returns></returns>
     [HttpGet("Turma/{TurmaId:int}")]
-    [Authorize(Policy = "AdminOrUser")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> GetByTeamId(int turmaId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         PagedResult<MatriculaDto> matriculas = await _matriculaService.GetByTeamIdAsync(turmaId, pageNumber, pageSize);

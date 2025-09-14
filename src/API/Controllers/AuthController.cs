@@ -32,6 +32,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Login([FromBody] LoginDto model)
     {
         var token = await _authService.LoginAsync(model);
@@ -39,7 +40,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("change-password")]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto model)
     {
         string username = User.Identity!.Name!;

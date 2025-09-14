@@ -24,14 +24,14 @@ public class AlunosController : ControllerBase
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id}")]
-    [Authorize(Policy = "AdminOrUser")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> GetById(int id)
     {
         AlunoDto aluno = await _alunoService.GetByIdAsync(id);
 
         if (aluno == null)
         {
-            return NotFound();
+            return NotFound("Aluno não encontrado.");
         }
 
         return Ok(aluno);
@@ -42,7 +42,7 @@ public class AlunosController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    [Authorize(Policy = "AdminOrUser")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         PagedResult<AlunoDto> alunos = await _alunoService.GetAllAsync(pageNumber, pageSize);
@@ -58,7 +58,7 @@ public class AlunosController : ControllerBase
     /// <param name="pageSize"></param>
     /// <returns></returns>
     [HttpGet("search")]
-    [Authorize(Policy = "AdminOrUser")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> SearchByName(
     [FromQuery] string nome,
     [FromQuery] int pageNumber = 1,
