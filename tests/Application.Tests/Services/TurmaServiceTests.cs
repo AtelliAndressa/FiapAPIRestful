@@ -30,9 +30,7 @@ namespace Application.Tests.Services
             _validatorMock = new Mock<IValidator<UpdateTurmaDto>>();
 
             _turmaService = new TurmaService(
-                _turmaRepoMock.Object,
-                _createValidatorMock.Object,
-                _validatorMock.Object
+                _turmaRepoMock.Object
             );
         }
 

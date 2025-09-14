@@ -33,9 +33,7 @@ namespace Application.Tests.Services
             _matriculaService = new MatriculaService(
                 _matriculaRepoMock.Object,
                 _alunoRepoMock.Object,
-                _turmaRepoMock.Object,
-                _createValidatorMock.Object,
-                _validatorMock.Object
+                _turmaRepoMock.Object
             );
         }
 
