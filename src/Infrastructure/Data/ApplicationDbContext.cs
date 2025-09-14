@@ -22,6 +22,7 @@ namespace Infrastructure.Data
             {
                 entity.Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 entity.HasIndex(e => e.Cpf).IsUnique();
+                entity.HasIndex(e => e.Email).IsUnique();
             });
 
             builder.Entity<Turma>(entity =>
