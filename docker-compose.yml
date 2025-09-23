@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # 1. O Serviço da nossa API .NET
   api-fiap:
     build:
       context: .
@@ -9,28 +8,23 @@ services:
     ports:
       - "8080:8080"
     environment:
-      # Garanta que suas variáveis estão corretas aqui
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=sql-server-fiap,1433;User ID=sa;Password=FiapAdmin_2025!;TrustServerCertificate=True
       - Jwt__Key=SUA_CHAVE_SECRETA_SUPER_LONGA_E_SEGURA_AQUI
       - Jwt__Issuer=https://localhost:7096
       - Jwt__Audience=https://localhost:7096
     depends_on:
-      # 👇👇 MUDANÇA IMPORTANTE AQUI 👇👇
-      # Agora a API espera o serviço do SQL estar "healthy" (saudável)
       sql-server-fiap:
         condition: service_healthy
 
-  # 2. O Serviço do Banco de Dados SQL Server
   sql-server-fiap:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
     ports:
       - "1433:1433"
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=FiapAdmin_2025! # Use a senha forte que definimos
+      - SA_PASSWORD=FiapAdmin_2025!
     
-    # 👇👇 ADIÇÃO IMPORTANTE AQUI (HEALTHCHECK) 👇👇
     healthcheck:
       test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'FiapAdmin_2025!' -q 'SELECT 1' || exit 1"]
       interval: 10s
