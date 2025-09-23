@@ -1,6 +1,6 @@
 # Desafio API RESTful - Secretaria FIAP
 
-Esta é uma API RESTful desenvolvida em .NET 8 como solução para o Desafio .NET da FIAP. A API gerencia alunos, turmas e matrículas, implementando autenticação JWT e seguindo padrões de arquitetura DDD e Clean Code.
+Esta é uma API RESTful desenvolvida em .NET 9 como solução para o Desafio .NET da FIAP. A API gerencia alunos, turmas e matrículas, implementando autenticação JWT e seguindo padrões de arquitetura DDD e Clean Code.
 
 ## Requisitos Atendidos
 
@@ -11,16 +11,16 @@ Este projeto atende a todos os requisitos funcionais (RF) e não funcionais (RNF
 - Listagens paginadas (10 por padrão) e ordenadas alfabeticamente (RF01).
 - Contagem de alunos por turma na listagem (RF02).
 - Busca de alunos por nome (RF09).
-- Validações robustas (RF03, RF04, RF06, RF07), incluindo CPF único, senhas fortes e regras de negócio.
+- Validações robustas (RF03, RF04, RF06, RF07), incluindo CPF/Email únicos, senhas fortes e regras de negócio.
 - Senhas armazenadas com hash seguro (RF08).
 - Documentação Swagger (RNF03)  e uso correto de verbos HTTP (RNF01).
 - Modelagem de banco com chaves (GUID) e restrições de índice único (RNF02).
 
 ## Tecnologias Utilizadas
 
-- **Framework**: .NET 8 (atendendo ao requisito .NET Core >= 6) 
+- **Framework**: .NET 9 (atendendo ao requisito .NET Core >= 6) 
 - **Arquitetura**: Abordagem baseada em DDD (Domain-Driven Design)
-- **Persistência**: Entity Framework Core 8
+- **Persistência**: Entity Framework Core 9
 - **Banco de Dados**: SQL Server
 - **Autenticação**: ASP.NET Core Identity + JWT Bearer
 - **Validação**: FluentValidation
@@ -35,7 +35,7 @@ Siga os passos abaixo para executar a aplicação localmente.
 
 ### 1. Pré-requisitos
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
 - SQL Server LocalDB (geralmente instalado com o Visual Studio 2022).
 
 ### 2. Configuração da Conexão
