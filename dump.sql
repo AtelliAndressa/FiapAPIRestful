@@ -129,6 +129,19 @@ CREATE INDEX [IX_Matriculas_TurmaId] ON [Matriculas] ([TurmaId]);
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
 VALUES (N'20250914144537_CriacaoInicialComGuids', N'9.0.9');
 
+DECLARE @var sysname;
+SELECT @var = [d].[name]
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Alunos]') AND [c].[name] = N'Email');
+IF @var IS NOT NULL EXEC(N'ALTER TABLE [Alunos] DROP CONSTRAINT [' + @var + '];');
+ALTER TABLE [Alunos] ALTER COLUMN [Email] nvarchar(450) NOT NULL;
+
+CREATE UNIQUE INDEX [IX_Alunos_Email] ON [Alunos] ([Email]);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250923183459_AddUniqueIndexToAlunoEmail', N'9.0.9');
+
 COMMIT;
 GO
 
