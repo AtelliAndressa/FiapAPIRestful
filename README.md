@@ -31,7 +31,36 @@ Este projeto atende a todos os requisitos funcionais (RF) e não funcionais (RNF
 
 ## Como Instalar e Executar
 
+Existem duas maneiras de executar este projeto. A maneira com Docker é a mais recomendada por ser mais simples.
+
+### Opção 1: Executando com Docker (Recomendado)
+
+Esta abordagem inicia a API e um banco de dados SQL Server com um único comando, conforme sugerido no desafio.
+
+#### Pré-requisitos
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado e em execução.
+
+#### Configuração
+1.  Clone este repositório.
+2.  Abra o arquivo `docker-compose.yml` na raiz do projeto.
+3.  Defina uma senha forte para o banco de dados em `SA_PASSWORD` no serviço `sql-server-fiap`.
+4.  Coloque a **mesma senha** na `ConnectionStrings__DefaultConnection` do serviço `api-fiap`.
+5.  Defina uma `Jwt__Key` segura no mesmo local.
+
+#### Execução
+Abra um terminal na raiz do projeto e execute o comando único:
+
+```bash
+docker compose up --build
+
+
+
+O Docker irá construir a imagem da API, iniciar os contêineres, aplicar as migrações e criar o usuário Admin automaticamente.
 Siga os passos abaixo para executar a aplicação localmente.
+
+
+
+### Opção 2: Executando localmente
 
 ### 1. Pré-requisitos
 
@@ -61,11 +90,58 @@ Siga os passos abaixo para executar a aplicação localmente.
     },
     ```
 
-### 3. Executando as Migrações
 
-Com a string de conexão configurada, aplique as migrações para criar o banco de dados e todas as tabelas (incluindo o índice único do CPF).
 
-Abra um terminal na pasta raiz do projeto (onde está o `.sln`) e execute:
+### Execução:
+
+### Aplique as Migrações:
+
+Abra um terminal na pasta raiz do projeto e execute:
 
 ```bash
 dotnet ef database update --startup-project src/API
+
+
+### Rode a Aplicação:
+
+
+```bash
+dotnet run --project src/API
+
+
+### Acessando a API (Para Ambas as Opções)
+
+Usuário Administrador Inicial:
+
+Na primeira vez que a aplicação rodar, o SeedData criará o usuário administrador padrão:
+
+Usuário: admin@exemplo.com
+
+Senha: Admin@123
+
+
+### Documentação (Swagger):
+
+Se rodando via Docker: acesse http://localhost:8080/swagger
+
+Se rodando localmente: acesse https://localhost:7096/swagger
+
+
+
+### Para testar os endpoints protegidos:
+
+Use o endpoint POST /api/auth/login com o usuário admin.
+
+Copie o token JWT da resposta.
+
+Clique no botão "Authorize" no topo do Swagger e cole o token no formato Bearer SEU_TOKEN_AQUI.
+
+
+
+### Testando a Aplicação:
+
+Para rodar a suíte completa de testes unitários, execute o seguinte comando na pasta raiz do projeto:
+
+
+```bash
+dotnet test
