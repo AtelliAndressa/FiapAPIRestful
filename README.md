@@ -131,6 +131,8 @@ Se rodando localmente: acesse https://localhost:7096/swagger
 ### Para testar os endpoints protegidos:
 
 Use o endpoint POST /api/auth/login com o usuário admin.
+usuario: "admin@exemplo.com"
+senha: "Admin@123"
 
 Copie o token JWT da resposta.
 
