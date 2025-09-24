@@ -142,6 +142,56 @@ CREATE UNIQUE INDEX [IX_Alunos_Email] ON [Alunos] ([Email]);
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
 VALUES (N'20250923183459_AddUniqueIndexToAlunoEmail', N'9.0.9');
 
+DECLARE @var1 sysname;
+SELECT @var1 = [d].[name]
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Turmas]') AND [c].[name] = N'Nome');
+IF @var1 IS NOT NULL EXEC(N'ALTER TABLE [Turmas] DROP CONSTRAINT [' + @var1 + '];');
+ALTER TABLE [Turmas] ALTER COLUMN [Nome] nvarchar(100) NOT NULL;
+
+DECLARE @var2 sysname;
+SELECT @var2 = [d].[name]
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Turmas]') AND [c].[name] = N'Descricao');
+IF @var2 IS NOT NULL EXEC(N'ALTER TABLE [Turmas] DROP CONSTRAINT [' + @var2 + '];');
+ALTER TABLE [Turmas] ALTER COLUMN [Descricao] nvarchar(300) NOT NULL;
+
+DECLARE @var3 sysname;
+SELECT @var3 = [d].[name]
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Alunos]') AND [c].[name] = N'Nome');
+IF @var3 IS NOT NULL EXEC(N'ALTER TABLE [Alunos] DROP CONSTRAINT [' + @var3 + '];');
+ALTER TABLE [Alunos] ALTER COLUMN [Nome] nvarchar(100) NOT NULL;
+
+DROP INDEX [IX_Alunos_Email] ON [Alunos];
+DECLARE @var4 sysname;
+SELECT @var4 = [d].[name]
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Alunos]') AND [c].[name] = N'Email');
+IF @var4 IS NOT NULL EXEC(N'ALTER TABLE [Alunos] DROP CONSTRAINT [' + @var4 + '];');
+ALTER TABLE [Alunos] ALTER COLUMN [Email] nvarchar(50) NOT NULL;
+CREATE UNIQUE INDEX [IX_Alunos_Email] ON [Alunos] ([Email]);
+
+DROP INDEX [IX_Alunos_Cpf] ON [Alunos];
+DECLARE @var5 sysname;
+SELECT @var5 = [d].[name]
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Alunos]') AND [c].[name] = N'Cpf');
+IF @var5 IS NOT NULL EXEC(N'ALTER TABLE [Alunos] DROP CONSTRAINT [' + @var5 + '];');
+ALTER TABLE [Alunos] ALTER COLUMN [Cpf] nchar(11) NOT NULL;
+CREATE UNIQUE INDEX [IX_Alunos_Cpf] ON [Alunos] ([Cpf]);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250924131634_AddUniqueEmailToAluno', N'9.0.9');
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250924131938_AddUnique', N'9.0.9');
+
 COMMIT;
 GO
 
