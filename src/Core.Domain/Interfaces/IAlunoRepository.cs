@@ -11,6 +11,8 @@ namespace Core.Domain.Interfaces
 
         Task<PagedResult<Aluno>> SearchByNameAsync(string nome, int pageNumber, int pageSize);
 
+        Task<Aluno> GetByEmailAsync(string email);
+
         Task AddAsync(Aluno aluno);
 
         Task UpdateAsync(Aluno aluno);

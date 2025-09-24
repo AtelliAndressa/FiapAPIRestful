@@ -25,6 +25,8 @@ public class AlunosController : ControllerBase
     /// <returns></returns>
     [HttpGet("{id}")]
     [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(typeof(AlunoDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(Guid id)
     {
         AlunoDto aluno = await _alunoService.GetByIdAsync(id);
@@ -43,6 +45,8 @@ public class AlunosController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(typeof(AlunoDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         PagedResult<AlunoDto> alunos = await _alunoService.GetAllAsync(pageNumber, pageSize);
@@ -59,6 +63,8 @@ public class AlunosController : ControllerBase
     /// <returns></returns>
     [HttpGet("search")]
     [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(typeof(AlunoDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> SearchByName(
     [FromQuery] string nome,
     [FromQuery] int pageNumber = 1,
@@ -81,6 +87,8 @@ public class AlunosController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(typeof(AlunoDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Post([FromBody] CreateAlunoDto createAlunoDto)
     {
         await _alunoService.AddAsync(createAlunoDto);
@@ -95,6 +103,8 @@ public class AlunosController : ControllerBase
     /// <returns></returns>
     [HttpPut("{id}")]
     [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(typeof(AlunoDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Put(Guid id, [FromBody] UpdateAlunoDto alunoDto)
     {
         await _alunoService.UpdateAsync(id, alunoDto);
@@ -109,6 +119,8 @@ public class AlunosController : ControllerBase
     /// <returns></returns>
     [HttpDelete("{id}")]
     [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(typeof(AlunoDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id)
     {
         bool result = await _alunoService.DeleteAsync(id);

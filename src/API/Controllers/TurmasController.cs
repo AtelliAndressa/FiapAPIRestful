@@ -25,6 +25,8 @@ public class TurmasController : ControllerBase
     /// <returns></returns>
     [HttpGet("{id}")]
     [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(Guid id)
     {
         TurmaDto turma = await _turmaService.GetByIdAsync(id);
@@ -43,6 +45,8 @@ public class TurmasController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         PagedResult<TurmaDto> turmas = await _turmaService.GetAllAsync(pageNumber, pageSize);
@@ -57,6 +61,8 @@ public class TurmasController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Post([FromBody] CreateTurmaDto createTurmaDto)
     {
         await _turmaService.AddAsync(createTurmaDto);
@@ -71,6 +77,8 @@ public class TurmasController : ControllerBase
     /// <returns></returns>
     [HttpPut("{id}")]
     [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Put(Guid id, [FromBody] UpdateTurmaDto turmaDto)
     {
         await _turmaService.UpdateAsync(id, turmaDto);
@@ -85,6 +93,8 @@ public class TurmasController : ControllerBase
     /// <returns></returns>
     [HttpDelete("{id}")]
     [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id)
     {
         await _turmaService.DeleteAsync(id);

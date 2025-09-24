@@ -23,11 +23,18 @@ namespace Infrastructure.Data
                 entity.Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 entity.HasIndex(e => e.Cpf).IsUnique();
                 entity.HasIndex(e => e.Email).IsUnique();
+
+                entity.Property(e => e.Nome).HasMaxLength(100);
+                entity.Property(e => e.Email).HasMaxLength(50);
+                entity.Property(e => e.Cpf).HasMaxLength(11).IsFixedLength();
             });
 
             builder.Entity<Turma>(entity =>
             {
                 entity.Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                entity.Property(e => e.Nome).HasMaxLength(100);
+                entity.Property(e => e.Descricao).HasMaxLength(300);
             });
 
             builder.Entity<Matricula>(entity =>

@@ -14,6 +14,7 @@ namespace Core.Application.Validators.Common;
 
             return Regex.IsMatch(name, @"^[A-Za-zÀ-ú\s]+$");
         }
+
         public static bool IsValidCpf(string cpf)
         {
             if (string.IsNullOrWhiteSpace(cpf))
@@ -64,37 +65,19 @@ namespace Core.Application.Validators.Common;
 
         public static bool IsValidEmail(string email)
         {
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                return false;
-            }
+            if (string.IsNullOrWhiteSpace(email)) return false;
 
             try
             {
-                var mailAddress = new MailAddress(email);
-
-                return true;
+                return Regex.IsMatch(email,
+                    @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                    RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
             }
-            catch (FormatException)
-            {
-                return false;
-            }
+            catch (RegexMatchTimeoutException) { return false; }
         }
 
         public static bool IsValidBirthDate(DateTime date)
         {
-            if (date >= DateTime.Now)
-            {       
-                return false;
-            }
-
-            int age = DateTime.Now.Year - date.Year;
-
-            if (date > DateTime.Now.AddYears(-age))
-            {
-                age--;
-            }
-
-            return age <= 120;
+            return date.Date < DateTime.Today;
         }
     }

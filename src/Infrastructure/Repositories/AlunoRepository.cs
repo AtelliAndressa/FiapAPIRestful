@@ -47,6 +47,13 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<Aluno> GetByEmailAsync(string email)
+        {
+            return await _context.Alunos
+                .AsNoTracking()
+                .FirstOrDefaultAsync(a => a.Email.ToLower() == email.ToLower());
+        }
+
         public async Task DeleteAsync(Guid id)
         {
             Aluno aluno = await _context.Alunos.FindAsync(id);

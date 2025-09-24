@@ -52,6 +52,18 @@ namespace Core.Application.Services
         {
             Aluno aluno = await _alunoRepository.GetByIdAsync(id);
 
+            if (aluno.Email.ToLower() != alunoDto.Email.ToLower())
+            {
+                var emailExists = await _alunoRepository.GetByEmailAsync(alunoDto.Email);
+
+                if (emailExists != null && emailExists.Id != id)
+                {
+                    throw new ValidationException("Este e-mail já está em uso por outro aluno.");
+                }
+
+                aluno.Email = alunoDto.Email;
+            }
+
             if (aluno == null)
             {
                 throw new ValidationException("Aluno não encontrado.");
@@ -96,7 +108,9 @@ namespace Core.Application.Services
 
         public async Task<PagedResult<AlunoDto>> SearchByNameAsync(string nome, int pageNumber, int pageSize)
         {
-            PagedResult<Aluno> pagedResultEntity = await _alunoRepository.SearchByNameAsync(nome, pageNumber, pageSize);
+            string nomeTrimmed = nome.Trim();
+
+            PagedResult<Aluno> pagedResultEntity = await _alunoRepository.SearchByNameAsync(nomeTrimmed, pageNumber, pageSize);
 
             List<AlunoDto> itemsDto = pagedResultEntity.Items
                 .Select(a => new AlunoDto(a.Id, a.Nome, a.Cpf, a.Email, a.DataNascimento))

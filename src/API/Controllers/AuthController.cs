@@ -23,6 +23,8 @@ public class AuthController : ControllerBase
     /// <returns></returns>
     [HttpPost("register-admin")]
     [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminDto model)
     {
         await _authService.RegisterAdminAsync(model);
@@ -37,6 +39,8 @@ public class AuthController : ControllerBase
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost("login")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Login([FromBody] LoginDto model)
     {
         var token = await _authService.LoginAsync(model);
@@ -52,6 +56,8 @@ public class AuthController : ControllerBase
     /// <returns></returns>
     [HttpPost("change-password")]
     [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto model)
     {
         string username = User.Identity!.Name!;
@@ -69,6 +75,8 @@ public class AuthController : ControllerBase
     /// <returns></returns>
     [HttpPost("reset-password-admin")]
     [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ResetPasswordAdmin([FromBody] ResetPasswordDto model)
     {
         await _authService.ResetPasswordByAdminAsync(model);

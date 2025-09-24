@@ -86,11 +86,15 @@ builder.Services.AddSwaggerGen(c => {
     c.IncludeXmlComments(xmlPath);
 });
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 try
 {
     app.ApplyMigrations();
+
     using (var scope = app.Services.CreateScope())
     {
         var services = scope.ServiceProvider;
@@ -102,6 +106,8 @@ catch (Exception ex)
     var logger = app.Services.GetRequiredService<ILogger<Program>>();
     logger.LogError(ex, "Ocorreu um erro durante a inicialização (migração/seed) do banco de dados.");
 }
+
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {
