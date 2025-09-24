@@ -1,6 +1,7 @@
 ﻿using Core.Application.DTOs;
 using Core.Application.Interfaces;
 using Core.Domain.Common;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -107,9 +108,21 @@ public class AlunosController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Put(Guid id, [FromBody] UpdateAlunoDto alunoDto)
     {
-        await _alunoService.UpdateAsync(id, alunoDto);
+        try
+        {
+            await _alunoService.UpdateAsync(id, alunoDto);
 
-        return NoContent();
+            return NoContent();
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Erro de Validação",
+                Detail = ex.Message
+            });
+        }
     }
 
     /// <summary>
